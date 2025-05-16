@@ -1,282 +1,106 @@
-export const detailsTabs = [
-  "Schedule",
-  "Tickets",
-  "Workshops",
-  "Speakers",
+export const allEvents = [
+  {
+    id: 1,
+    isFree: true,
+    date: "24/08/25",
+    time: "9PM",
+    location: "Beston National Stadium, SA",
+    name: "Developer's Bootcamp 2025",
+    description:
+      "Join the most anticipated coding bootcamp of the year featuring workshops on AI, blockchain, and cloud computing with industry experts.",
+  },
+  {
+    id: 2,
+    isFree: false,
+    date: "30/09/25",
+    time: "7:30PM",
+    location: "Central Arena, Downtown",
+    name: "Coachella Tech Conference",
+    description:
+      "Where technology meets creativity - experience cutting-edge innovations, interactive displays, and networking opportunities in a festival atmosphere.",
+  },
+  {
+    id: 3,
+    isFree: true,
+    date: "15/10/25",
+    time: "8PM",
+    location: "City Park, East Side",
+    name: "Token 2040 Summit",
+    description:
+      "Explore the future of digital currencies and blockchain technology with keynote speakers from the world's leading financial institutions and tech companies.",
+  },
+  {
+    id: 4,
+    isFree: false,
+    date: "22/11/25",
+    time: "6PM",
+    location: "Convention Center, North",
+    name: "Global Gaming Expo",
+    description:
+      "The ultimate gaming convention featuring new releases, tournaments, cosplay competitions, and exclusive previews of upcoming titles.",
+  },
+  {
+    id: 5,
+    isFree: true,
+    date: "05/12/25",
+    time: "9:30PM",
+    location: "Grand Hall, West End",
+    name: "Future of Work Forum",
+    description:
+      "Discussing remote work trends, AI integration in workplaces, and skills required for the next decade with industry leaders and futurists.",
+  },
+  {
+    id: 6,
+    isFree: false,
+    date: "18/01/26",
+    time: "7PM",
+    location: "Metropolitan Stadium",
+    name: "Startup Pitch Night",
+    description:
+      "Watch innovative startups compete for funding and mentorship opportunities. Network with investors, entrepreneurs, and tech enthusiasts.",
+  },
+  {
+    id: 7,
+    isFree: true,
+    date: "27/02/26",
+    time: "8:30PM",
+    location: "Harborview Arena",
+    name: "Cybersecurity Summit 2026",
+    description:
+      "Learn about the latest threats, defense strategies, and security tools from white-hat hackers and security experts from around the globe.",
+  },
+  {
+    id: 8,
+    isFree: false,
+    date: "14/03/26",
+    time: "6:30PM",
+    location: "Sunshine Pavilion",
+    name: "Green Tech Expo",
+    description:
+      "Showcasing sustainable technologies, renewable energy innovations, and eco-friendly products that are shaping our planet's future.",
+  },
 ];
 
-export const dummyEvents = [
+
+export const myEvents = [
   {
-    eventId: 0,
-    eventName: "Web3 Lagos Conference",
-    eventStartDate: "1725526800",
-    eventEndDate: "1725735600",
-    eventLocation: "Lagos, Nigeria",
+    id: 1,
+    isFree: true,
+    date: "24/08/25",
+    time: "9PM",
+    location: "Beston National Stadium, SA",
+    name: "Developer's Bootcamp 2025",
     description:
-      "The Web3 Lagos Conference is the largest Web3 Event in Lagos, Nigeria. This conference will bring together Web3 enthusiasts from all over Nigeria and beyond. Here, community meets technology for three days of intensive Networking and Learning experiences. Future of money, you deserve to be in the know!",
-    numberOfTickets: 2000,
-    numberOfRegistration: 2000,
-    paid: false,
-    schedule: [
-      {
-        time: "1725526800",
-        title: "Registration",
-        description: "All attendees checkin during this period",
-      },
-      {
-        time: "1725528800",
-        title: "Opening speech",
-        description: "The founder gives an opening speech",
-      },
-      {
-        time: "1725529800",
-        title: "Keynote speech",
-        description: "The keynote speaker speaks about the possibility of web3",
-      },
-    ],
-    ticketsType: [
-      { type: "Vip", price: 10, numberOfTickets: 0, sold: 0 },
-      { type: "Regular", price: 5, numberOfTickets: 0, sold: 0 },
-      { type: "Early bird", price: 3, numberOfTickets: 0, sold: 0 },
-    ],
-    workshops: [
-      {
-        name: "Metal model for building smart contracts on Bitcoin",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla at arcu varius, suscipit leo ut, gravida tortor.",
-      },
-      {
-        name: "Blockchain and its dilenma",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla at arcu varius, suscipit leo ut, gravida tortor.",
-      },
-      {
-        name: "AI revolution",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla at arcu varius, suscipit leo ut, gravida tortor.",
-      },
-    ],
-    speakers: [
-      {
-        img: "/speaker-one.png",
-        name: "John Doe",
-        description: "CEO, Dummy company",
-      },
-      {
-        img: "/speaker-two.png",
-        name: "Peter Smart",
-        description: "Technical Writter, Smart Chain",
-      },
-      {
-        img: "/speaker-three.png",
-        name: "Vitalik Buterin",
-        description: "Founder, Ethereum",
-      },
-      {
-        img: "/speaker-four.png",
-        name: "Bad Girl Riri",
-        description: "Musician, Wife of ASAP Rocky",
-      },
-    ],
-    sponsors: [
-      { type: "Gold", img: "/ef.jpeg" },
-      { type: "Gold", img: "/lisk.jpeg" },
-      { type: "Platinum", img: "/icp.jpeg" },
-      { type: "Platinum", img: "/solana.jpeg" },
-    ],
+      "Join the most anticipated coding bootcamp of the year featuring workshops on AI, blockchain, and cloud computing with industry experts.",
   },
   {
-    eventId: 1,
-    eventName: "Web3 Lagos Conference",
-    eventStartDate: "1725526800",
-    eventEndDate: "1725735600",
+    id: 2,
+    isFree: false,
+    date: "30/09/25",
+    time: "7:30PM",
+    location: "Central Arena, Downtown",
+    name: "Coachella Tech Conference",
     description:
-      "The Web3 Lagos Conference is the largest Web3 Event in Lagos, Nigeria. This conference will bring together Web3 enthusiasts from all over Nigeria and beyond. Here, community meets technology for three days of intensive Networking and Learning experiences. Future of money, you deserve to be in the know!",
-    numberOfTickets: "2000",
-    numberOfRegistration: "2000",
-    paid: true,
-    schedule: [],
-    ticketsType: [
-      { type: "Vip", price: 10, numberOfTickets: 0, sold: 0 },
-      { type: "Regular", price: 5, numberOfTickets: 0, sold: 0 },
-      { type: "Early bird", price: 3, numberOfTickets: 0, sold: 0 },
-    ],
-    workshops: [
-      {
-        name: "Metal model for building smart contracts on Bitcoin",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla at arcu varius, suscipit leo ut, gravida tortor.",
-      },
-      {
-        name: "Blockchain and its dilenma",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla at arcu varius, suscipit leo ut, gravida tortor.",
-      },
-      {
-        name: "AI revolution",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla at arcu varius, suscipit leo ut, gravida tortor.",
-      },
-    ],
-    speakers: [
-      {
-        img: "/speaker-one.png",
-        name: "John Doe",
-        description: "CEO, Dummy company",
-      },
-      {
-        img: "/speaker-two.png",
-        name: "Peter Smart",
-        description: "Technical Writter, Smart Chain",
-      },
-      {
-        img: "/speaker-three.png",
-        name: "Vitalik Buterin",
-        description: "Founder, Ethereum",
-      },
-      {
-        img: "/speaker-four.png",
-        name: "Bad girl Riri",
-        description: "Musician, Wife of ASAP Rocky",
-      },
-    ],
-    sponsors: [
-      { type: "Gold", img: "/ef.jpeg" },
-      { type: "Gold", img: "/lisk.jpeg" },
-      { type: "Platinum", img: "/icp.jpeg" },
-      { type: "Platinum", img: "/solana.jpeg" },
-    ],
-  },
-  {
-    eventId: 2,
-    eventName: "Web3 Lagos Conference",
-    eventStartDate: "1725526800",
-    eventEndDate: "1725735600",
-    description:
-      "The Web3 Lagos Conference is the largest Web3 Event in Lagos, Nigeria. This conference will bring together Web3 enthusiasts from all over Nigeria and beyond. Here, community meets technology for three days of intensive Networking and Learning experiences. Future of money, you deserve to be in the know!",
-    numberOfTickets: "2000",
-    numberOfRegistration: "2000",
-    paid: true,
-    schedule: [
-      { time: "", title: "", description: "" },
-      { time: "", title: "", description: "" },
-      { time: "", title: "", description: "" },
-    ],
-    ticketsType: [
-      { type: "Vip", price: 10, numberOfTickets: 0, sold: 0 },
-      { type: "Regular", price: 5, numberOfTickets: 0, sold: 0 },
-      { type: "Early bird", price: 3, numberOfTickets: 0, sold: 0 },
-    ],
-    workshops: [
-      {
-        name: "Metal model for building smart contracts on Bitcoin",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla at arcu varius, suscipit leo ut, gravida tortor.",
-      },
-      {
-        name: "Blockchain and its dilenma",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla at arcu varius, suscipit leo ut, gravida tortor.",
-      },
-      {
-        name: "AI revolution",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla at arcu varius, suscipit leo ut, gravida tortor.",
-      },
-    ],
-    speakers: [
-      {
-        img: "/speaker-one.png",
-        name: "John Doe",
-        description: "CEO, Dummy company",
-      },
-      {
-        img: "/speaker-two.png",
-        name: "Peter Smart",
-        description: "Technical Writter, Smart Chain",
-      },
-      {
-        img: "/speaker-three.png",
-        name: "Vitalik Buterin",
-        description: "Founder, Ethereum",
-      },
-      {
-        img: "/speaker-four.png",
-        name: "Bad girl Riri",
-        description: "Musician, Wife of ASAP Rocky",
-      },
-    ],
-    sponsors: [
-      { type: "Gold", img: "/ef.jpeg" },
-      { type: "Gold", img: "/lisk.jpeg" },
-      { type: "Platinum", img: "/icp.jpeg" },
-      { type: "Platinum", img: "/solana.jpeg" },
-    ],
-  },
-  {
-    eventId: 3,
-    eventName: "Web3 Lagos Conference",
-    eventStartDate: "1725526800",
-    eventEndDate: "1725735600",
-    description:
-      "The Web3 Lagos Conference is the largest Web3 Event in Lagos, Nigeria. This conference will bring together Web3 enthusiasts from all over Nigeria and beyond. Here, community meets technology for three days of intensive Networking and Learning experiences. Future of money, you deserve to be in the know!",
-    numberOfTickets: "2000",
-    numberOfRegistration: "2000",
-    paid: false,
-    schedule: [
-      { time: "", title: "", description: "" },
-      { time: "", title: "", description: "" },
-      { time: "", title: "", description: "" },
-    ],
-    ticketsType: [
-      { type: "Vip", price: 10, numberOfTickets: 0, sold: 0 },
-      { type: "Regular", price: 5, numberOfTickets: 0, sold: 0 },
-      { type: "Early bird", price: 3, numberOfTickets: 0, sold: 0 },
-    ],
-    workshops: [
-      {
-        name: "Metal model for building smart contracts on Bitcoin",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla at arcu varius, suscipit leo ut, gravida tortor.",
-      },
-      {
-        name: "Blockchain and its dilenma",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla at arcu varius, suscipit leo ut, gravida tortor.",
-      },
-      {
-        name: "AI revolution",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla at arcu varius, suscipit leo ut, gravida tortor.",
-      },
-    ],
-    speakers: [
-      {
-        img: "/speaker-one.png",
-        name: "John Doe",
-        description: "CEO, Dummy company",
-      },
-      {
-        img: "/speaker-two.png",
-        name: "Peter Smart",
-        description: "Technical Writter, Smart Chain",
-      },
-      {
-        img: "/speaker-three.png",
-        name: "Vitalik Buterin",
-        description: "Founder, Ethereum",
-      },
-      {
-        img: "/speaker-four.png",
-        name: "Bad girl Riri",
-        description: "Musician, Wife of ASAP Rocky",
-      },
-    ],
-    sponsors: [
-      { type: "Gold", img: "/ef.jpeg" },
-      { type: "Gold", img: "/lisk.jpeg" },
-      { type: "Platinum", img: "/icp.jpeg" },
-      { type: "Platinum", img: "/solana.jpeg" },
-    ],
+      "Where technology meets creativity - experience cutting-edge innovations, interactive displays, and networking opportunities in a festival atmosphere.",
   },
 ];
