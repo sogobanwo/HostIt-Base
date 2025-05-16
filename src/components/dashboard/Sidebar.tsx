@@ -33,13 +33,13 @@ const Sidebar = (props: Props) => {
           </div>
           <div className={`${isActive("/my-events") ? "bg-subsidiary" : ""
             } hover:bg-subsidiary w-[90%] flex justify-center items-center rounded-full h-10 2xl:h-14`}
-            onClick={() => {isActive("/dashboard") ? router.push("/dashboard/attendee/my-events") : router.push("/login")}} >
+            onClick={() => {isActive("/dashboard") ? router.push("/dashboard/attendee/my-events") : router.push("/attendee-login")}} >
             <HiTicket
               className="2xl:w-[35px] 2xl:h-[35px] w-[30px] h-[30px]"
               color={"#FFFFFF"}
             />
           </div>
-          <div className="hover:bg-subsidiary w-[90%] flex justify-center items-center rounded-full h-10 2xl:h-14">
+          <div className="hover:bg-subsidiary w-[90%] flex justify-center items-center rounded-full h-10 2xl:h-14" onClick={() => {isActive("/dashboard/organizer") ? router.push("/dashboard/attendee/create-event") : router.push("/organizer-login")}}>
             <IoIosCreate
               className="2xl:w-[35px] 2xl:h-[35px] w-[30px] h-[30px]"
               color={"#FFFFFF"}

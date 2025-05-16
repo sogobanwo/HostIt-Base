@@ -32,7 +32,7 @@ const Header = (props: Props) => {
             <Button
               className="2xl:text-lg text-sm h-12 2xl:h-14 w-40 font-semibold rounded-lg bg-subsidiary hover:bg-white hover:text-subsidiary text-white"
               onClick={() => {
-                router.push("/login");
+                router.push("/attendee-login");
               }}
             >
               Log in

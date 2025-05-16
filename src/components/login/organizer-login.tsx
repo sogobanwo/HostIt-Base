@@ -5,11 +5,10 @@ import { Card } from "../ui/card";
 import { Button } from "../ui/button";
 import { FaUsersRectangle } from "react-icons/fa6";
 import Link from "next/link";
-type Props = {
-  setIsAttendeeLogin: React.Dispatch<React.SetStateAction<boolean>>;
-};
+import { useRouter } from "next/navigation";
 
-const OrganizerLogin = (props: Props) => {
+const OrganizerLogin = () => {
+    const router = useRouter();
   return (
     <div className="2xl:max-w-[1200px] max-w-[1024px] min-h-screen mx-auto flex flex-col 2xl:pt-28 pt-10 2xl:gap-10">
       <Link href={"/"}>
@@ -25,7 +24,7 @@ const OrganizerLogin = (props: Props) => {
         <AttendeeOrganizerCircle page="Organize" />
         <div className="relative w-60 h-60 -ml-40">
           <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="100" cy="100" r="50" fill="#007CFA" stroke-width="2" />
+            <circle cx="100" cy="100" r="50" fill="#007CFA" strokeWidth="2" />
           </svg>
         </div>
       </div>
@@ -48,7 +47,7 @@ const OrganizerLogin = (props: Props) => {
           Attending an event?{" "}
           <span
             className="text-subsidiary underline hover:text-white cursor-pointer"
-            onClick={() => props.setIsAttendeeLogin(true)}
+            onClick={() => router.push("/attendee-login")}
           >
             Log in here
           </span>

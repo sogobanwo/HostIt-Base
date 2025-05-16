@@ -7,11 +7,7 @@ import { FaUsersRectangle } from "react-icons/fa6";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-type Props = {
-    setIsAttendeeLogin: React.Dispatch<React.SetStateAction<boolean>>
-};
-
-const AttendeeLogin = (props: Props) => {
+const AttendeeLogin = () => {
     const router = useRouter();
   return (
     <div className="2xl:max-w-[1200px] max-w-[1024px] min-h-screen mx-auto flex flex-col 2xl:pt-28 pt-10 2xl:gap-10">
@@ -47,7 +43,7 @@ const AttendeeLogin = (props: Props) => {
             Log in
           </Button>
         </Card>
-        <p className="2xl:text-2xl text-xl font-semibold">Hosting an event? <span className="text-subsidiary underline hover:text-white cursor-pointer" onClick={() => props.setIsAttendeeLogin(false)}>Log in here</span></p>
+        <p className="2xl:text-2xl text-xl font-semibold">Hosting an event? <span className="text-subsidiary underline hover:text-white cursor-pointer" onClick={() => router.push("/organizer-login")}>Log in here</span></p>
       </div>
     </div>
   );

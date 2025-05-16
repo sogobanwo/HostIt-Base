@@ -93,7 +93,7 @@ const Page = () => {
                   <h1 className="text-3xl font-bold bg-gradient-to-r from-[#007CFA] from-30% to-white to-95% bg-clip-text text-transparent">
                     Log In Required.
                   </h1>
-                  <Button className="2xl:text-lg text-sm h-12 2xl:h-14 w-52 font-semibold bg-subsidiary hover:bg-white hover:text-subsidiary rounded-xl" onClick={() => {router.push("/login")}}>
+                  <Button className="2xl:text-lg text-sm h-12 2xl:h-14 w-52 font-semibold bg-subsidiary hover:bg-white hover:text-subsidiary rounded-xl" onClick={() => {router.push("/attendee-login")}}>
                     Log in
                   </Button>
                 </div>
