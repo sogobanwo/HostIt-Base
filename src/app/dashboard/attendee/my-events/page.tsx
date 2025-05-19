@@ -57,6 +57,7 @@ const Page = (props: Props) => {
               location={event.location}
               name={event.name}
               description={event.description}
+              id={event.id}
             />
           </div>
         ))}

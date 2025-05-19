@@ -51,6 +51,7 @@ const Page = (props: Props) => {
         {currentEvents.map((event) => (
           <div key={event.id} className="2xl:w-[24%] lg:w-[32%] mb-6">
             <EventCard
+              id={event.id}
               isFree={event.isFree}
               date={event.date}
               time={event.time}

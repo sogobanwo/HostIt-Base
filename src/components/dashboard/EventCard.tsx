@@ -19,19 +19,28 @@ const EventCard = ({
   location,
   name,
   description,
-  id
+  id,
 }: Props) => {
-
   const router = useRouter();
   const pathname = usePathname();
-  const isActive = (route: string) => {
-    return pathname.includes(route.replace("/", ""));
-  };
 
   return (
-    <div className="border border-subsidiary bg-subsidiary w-full rounded-[20px] h-[420px] my-2 relative group overflow-hidden hover:cursor-pointer" onClick={() => {isActive("/dashboard") ? router.push(`/dashboard/attendee/explore/${id}`) : router.push(`/explore/${id}`);
-
-    }}>
+    <div
+      className="border border-subsidiary bg-subsidiary w-full rounded-[20px] h-[420px] my-2 relative group overflow-hidden hover:cursor-pointer"
+      onClick={() => {
+        switch (pathname) {
+          case "/dashboard/attendee/explore":
+            router.push(`/dashboard/attendee/explore/${id}`);
+            break;
+          case "/dashboard/attendee/my-events":
+            router.push(`/dashboard/attendee/my-events/${id}`);
+            break;
+          default:
+            router.push(`/explore/${id}`);
+            break;
+        }
+      }}
+    >
       <div className="absolute top-4 right-4 px-4 py-1 rounded-full font-semibold text-base z-1 border-2 border-white bg-[#13193980] text-white">
         {isFree ? "Free" : "Paid"}
       </div>
@@ -54,7 +63,7 @@ const EventCard = ({
         <p className="text-white text-4xl font-bold">{date}</p>
         <p className="text-white text-xl font-medium mt-2">{time}</p>
         <p className="text-white text-lg font-medium mt-2 text-center px-4 flex items-baseline">
-          <FaLocationDot size={20} className="mr-2 " /> {location}
+          <FaLocationDot size={20} className="mr-2" /> {location}
         </p>
       </div>
 

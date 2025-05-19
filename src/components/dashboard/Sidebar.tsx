@@ -23,7 +23,7 @@ const Sidebar = (props: Props) => {
         <div className="w-12 2xl:w-16 border-subsidiary border rounded-full flex flex-col justify-center items-center gap-5 py-4 2xl:py-6">
           <div
             className={`${isActive("/explore") ? "bg-subsidiary" : ""
-            } hover:bg-subsidiary w-[90%] flex justify-center items-center rounded-full h-10 2xl:h-14`}
+            } hover:bg-subsidiary w-[90%] flex justify-center items-center rounded-full h-10 2xl:h-14 cursor-pointer`}
             onClick={() => {isActive("/dashboard") ? router.push("/dashboard/attendee/explore") : router.push("/explore")}}
           >
             <MdExplore
@@ -32,22 +32,22 @@ const Sidebar = (props: Props) => {
             />
           </div>
           <div className={`${isActive("/my-events") ? "bg-subsidiary" : ""
-            } hover:bg-subsidiary w-[90%] flex justify-center items-center rounded-full h-10 2xl:h-14`}
+            } hover:bg-subsidiary w-[90%] flex justify-center items-center rounded-full h-10 2xl:h-14 cursor-pointer`}
             onClick={() => {isActive("/dashboard") ? router.push("/dashboard/attendee/my-events") : router.push("/attendee-login")}} >
             <HiTicket
               className="2xl:w-[35px] 2xl:h-[35px] w-[30px] h-[30px]"
               color={"#FFFFFF"}
             />
           </div>
-          <div className="hover:bg-subsidiary w-[90%] flex justify-center items-center rounded-full h-10 2xl:h-14" onClick={() => {isActive("/dashboard/organizer") ? router.push("/dashboard/attendee/create-event") : router.push("/organizer-login")}}>
+          <div className="hover:bg-subsidiary w-[90%] flex justify-center items-center rounded-full h-10 2xl:h-14 cursor-pointer" onClick={() => {isActive("/dashboard/organizer") ? router.push("/dashboard/attendee/create-event") : router.push("/organizer-login")}}>
             <IoIosCreate
               className="2xl:w-[35px] 2xl:h-[35px] w-[30px] h-[30px]"
               color={"#FFFFFF"}
             />
           </div>
         </div>
-        <div className="w-12 2xl:w-16 border-subsidiary border rounded-full flex flex-col justify-center items-center">
-          <div className="hover:bg-subsidiary w-full flex justify-center items-center rounded-full h-12 2xl:h-16">
+        <div className="w-12 2xl:w-16 border-subsidiary border rounded-full flex flex-col justify-center items-center ">
+          <div className="hover:bg-subsidiary w-full flex justify-center items-center rounded-full h-12 2xl:h-16 cursor-pointer">
             <FaUserAlt
               className="2xl:w-[35px] 2xl:h-[35px] w-[30px] h-[30px]"
               color={"#FFFFFF"}
@@ -56,7 +56,7 @@ const Sidebar = (props: Props) => {
         </div>
       </div>
       <div className="w-12 2xl:w-16 border-subsidiary border rounded-full flex flex-col justify-center items-center">
-        <div className="hover:bg-subsidiary w-full flex justify-center items-center rounded-full h-12 2xl:h-16" onClick={() => {router.push("/")}}>
+        <div className="hover:bg-subsidiary w-full flex justify-center items-center rounded-full h-12 2xl:h-16 cursor-pointer" onClick={() => {router.push("/")}}>
           <IoLogOut
             className="2xl:w-[35px] 2xl:h-[35px] w-[30px] h-[30px]"
             color={"#FFFFFF"}

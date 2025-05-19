@@ -3,11 +3,12 @@ import React from "react";
 import { IoIosNotifications } from "react-icons/io";
 import { IoFilter } from "react-icons/io5";
 import { Button } from "../ui/button";
-import { usePathname, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 
 type Props = {};
 
 const Header = (props: Props) => {
+  const { id } = useParams();
   const pathname = usePathname();
   const isActive = (route: string) => {
     return pathname.includes(route.replace("/", ""));
@@ -16,7 +17,7 @@ const Header = (props: Props) => {
   const router = useRouter();
   return (
     <div className="h-[12%] fixed w-full flex items-center z-50 bg-principal">
-      <div className="w-[7%] h-full flex items-center justify-center">
+      <div className="w-[7%] h-full flex items-center justify-center cursor-pointer">
         <img
           src="/dash-logo.png"
           alt="logo"
@@ -30,7 +31,7 @@ const Header = (props: Props) => {
         <div className="flex items-center gap-4">
           {!isActive("/dashboard") && (
             <Button
-              className="2xl:text-lg text-sm h-12 2xl:h-14 w-40 font-semibold rounded-lg bg-subsidiary hover:bg-white hover:text-subsidiary text-white"
+              className="2xl:text-lg text-sm h-12 2xl:h-14 w-40 font-semibold rounded-lg bg-subsidiary hover:bg-white hover:text-subsidiary text-white cursor-pointer"
               onClick={() => {
                 router.push("/attendee-login");
               }}
@@ -39,18 +40,20 @@ const Header = (props: Props) => {
             </Button>
           )}
 
-          <div className="bg-subsidiary flex justify-center items-center rounded-full h-12 w-12 2xl:h-14 2xl:w-14">
+          <div className="bg-subsidiary flex justify-center items-center rounded-full h-12 w-12 2xl:h-14 2xl:w-14 cursor-pointer">
             <IoIosNotifications
               className="2xl:w-[35px] 2xl:h-[35px] w-[30px] h-[30px]"
               color={"#FFFFFF"}
             />
           </div>
-          <div className="bg-subsidiary flex justify-center items-center rounded-full h-12 w-12 2xl:h-14 2xl:w-14">
-            <IoFilter
-              className="2xl:w-[35px] 2xl:h-[35px] w-[30px] h-[30px]"
-              color={"#FFFFFF"}
-            />
-          </div>
+          {!isActive(`${id}`) && (
+            <div className="bg-subsidiary flex justify-center items-center rounded-full h-12 w-12 2xl:h-14 2xl:w-14 cursor-pointer">
+              <IoFilter
+                className="2xl:w-[35px] 2xl:h-[35px] w-[30px] h-[30px]"
+                color={"#FFFFFF"}
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>

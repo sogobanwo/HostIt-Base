@@ -8,7 +8,7 @@ type Props = {
 const TicketPoap = ({isTicket}: Props) => {
   return (
     <div className="border border-subsidiary 2xl:py-6 py-4 2xl:px-10 px-6 rounded-2xl flex flex-col gap-4">
-      <h1 className="2xl:text-2xl text-lg font-bold bg-gradient-to-r from-[#007CFA] from-30% to-white to-95% bg-clip-text text-transparent">
+      <h1 className="2xl:text-2xl text-lg font-bold bg-gradient-to-r from-[#007CFA] from-30% to-white to-95% bg-clip-text text-transparent inline-flex w-auto">
         {isTicket ? "TICKETS" : "POAPs"}
       </h1>
       <div className="flex justify-between items-center">

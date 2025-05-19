@@ -78,7 +78,7 @@ const Page = () => {
               />
             </div>
             <Dialog>
-              <DialogTrigger className="2xl:text-lg text-sm h-12 2xl:h-14 2xl:w-56 w-48ont-semibold rounded-lg bg-subsidiary hover:bg-white hover:text-subsidiary text-white font-semibold">
+              <DialogTrigger className="2xl:text-lg text-sm h-12 2xl:h-14 2xl:w-56 w-48 rounded-lg bg-subsidiary hover:bg-white hover:text-subsidiary text-white font-semibold">
                 Register
               </DialogTrigger>
               <DialogContent className="border bg-principal border-subsidiary rounded-3xl p-0">

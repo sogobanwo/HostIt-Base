@@ -16,10 +16,10 @@ import { GiPadlock } from "react-icons/gi";
 
 const Page = () => {
   const router = useRouter();
-  const params = useParams();
-  const { id } = params;
-    console.log(id);
+  const { id } = useParams();
+
   const currentEvent = allEvents.find((event) => event.id === Number(id));
+  console.log(currentEvent);
 
   return (
     <div className="mx-8 2xl:mx-12">
@@ -79,8 +79,8 @@ const Page = () => {
               />
             </div>
             <Dialog>
-              <DialogTrigger className="2xl:text-lg text-sm h-12 2xl:h-14 2xl:w-56 w-48ont-semibold rounded-lg bg-subsidiary hover:bg-white hover:text-subsidiary text-white font-semibold">
-                Register
+              <DialogTrigger className="2xl:text-lg text-sm h-12 2xl:h-14 2xl:w-56 w-48 font-semibold rounded-lg bg-subsidiary hover:bg-white hover:text-subsidiary text-white">
+                Register/Buy
               </DialogTrigger>
               <DialogContent className="border bg-principal border-subsidiary rounded-3xl p-0">
                 <div
@@ -91,10 +91,10 @@ const Page = () => {
                 </div>
                 <div className="p-8 flex flex-col justify-center items-center gap-4">
                   <h1 className="text-3xl font-bold bg-gradient-to-r from-[#007CFA] from-30% to-white to-95% bg-clip-text text-transparent">
-                    Log In Required.
+                    This ticket cost $100
                   </h1>
                   <Button className="2xl:text-lg text-sm h-12 2xl:h-14 w-52 font-semibold bg-subsidiary hover:bg-white hover:text-subsidiary rounded-xl" onClick={() => {router.push("/attendee-login")}}>
-                    Log in
+                    Buy now
                   </Button>
                 </div>
               </DialogContent>
