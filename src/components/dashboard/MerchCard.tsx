@@ -1,21 +1,12 @@
 import React from "react";
-import { FaLocationDot } from "react-icons/fa6";
-import { usePathname, useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 
 type Props = {
   isFree?: boolean;
-  date?: string;
-  time?: string;
-  location?: string;
-  description?: string;
-  name?: string;
-  id?: number;
+  isOrganizer?: boolean;
 };
 
-const MerchCard = ({ isFree, location, name }: Props) => {
-  const router = useRouter();
-  const pathname = usePathname();
+const MerchCard = ({ isFree, isOrganizer}: Props) => {
 
   return (
     <div className="border border-subsidiary bg-subsidiary w-full rounded-[20px] h-[420px] my-2 relative group overflow-hidden hover:cursor-pointer">
@@ -49,7 +40,8 @@ const MerchCard = ({ isFree, location, name }: Props) => {
             <p className="text-white text-2xl font-semibold">Total: 200</p>
             <p className="text-white text-sm">Available: 100</p>
         </div>
-        <Button className="w-4/5 border border-white mt-8 bg-transparent cursor-pointer mx-auto text-xl py-6 z-50 hover:bg-transparent hover:opacity-60">Get</Button>
+        {!isOrganizer ?
+        <Button className="w-4/5 border border-white mt-8 bg-transparent cursor-pointer mx-auto text-xl py-6 z-50 hover:bg-transparent hover:opacity-60">Get</Button>: ""}
       </div>
 
       <div className="px-8 py-4 flex flex-col gap-3 transition-opacity duration-500 ease-in-out group-hover:opacity-0">

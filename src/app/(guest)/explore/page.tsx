@@ -10,46 +10,44 @@ type Props = {};
 const Page = (props: Props) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [eventsPerPage, setEventsPerPage] = useState(6);
-  const [is2XL, setIs2XL] = useState(false);
 
   useEffect(() => {
     const checkScreenSize = () => {
       const is2XLScreen = window.innerWidth >= 1536;
-      setIs2XL(is2XLScreen);
-      setEventsPerPage(is2XLScreen ? 8 : 6);
+      const isSM = window.innerWidth < 768;
+      setEventsPerPage(is2XLScreen ? 8 : isSM ? 2 : 6);
     };
 
     checkScreenSize();
-
-    window.addEventListener('resize', checkScreenSize);
-
-    return () => window.removeEventListener('resize', checkScreenSize);
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
-  // Recalculate current page when events per page changes to avoid showing empty pages
   useEffect(() => {
     const newTotalPages = Math.ceil(allEvents.length / eventsPerPage);
     if (currentPage > newTotalPages && newTotalPages > 0) {
       setCurrentPage(newTotalPages);
     }
-  }, [eventsPerPage, allEvents.length, currentPage]);
+  }, [eventsPerPage, currentPage]);
 
   const totalPages = Math.ceil(allEvents.length / eventsPerPage);
 
-  // Get current events to display
   const indexOfLastEvent = currentPage * eventsPerPage;
   const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
   const currentEvents = allEvents.slice(indexOfFirstEvent, indexOfLastEvent);
 
-  // Handle page change
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
+
   return (
     <div className="pb-16 relative min-h-[82vh]">
-      <div className="flex flex-wrap lg:gap-[1.3%] 2xl:px-12 px-8">
+      <div className="flex flex-wrap gap-4 sm:gap-6 px-4 sm:px-6 md:px-8 2xl:px-12 justify-center">
         {currentEvents.map((event) => (
-          <div key={event.id} className="2xl:w-[24%] lg:w-[32%] mb-6">
+          <div
+            key={event.id}
+            className="w-full sm:w-[48%] md:w-[30%] 2xl:w-[23%] mb-6"
+          >
             <EventCard
               isFree={event.isFree}
               date={event.date}
@@ -63,8 +61,8 @@ const Page = (props: Props) => {
         ))}
       </div>
 
-      {/* Pagination at bottom right */}
-      <div className="absolute bottom-4 right-8 2xl:right-12">
+      {/* Pagination, mobile responsive */}
+      <div className="md:absolute md:bottom-4 flex justify-center right-4 sm:right-6 md:right-8 2xl:right-12 mb-10">
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}

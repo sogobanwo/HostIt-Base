@@ -35,6 +35,9 @@ const EventCard = ({
           case "/dashboard/attendee/my-events":
             router.push(`/dashboard/attendee/my-events/${id}`);
             break;
+          case "/dashboard/organizer/event-analytics":
+            router.push(`/dashboard/organizer/event-analytics/${id}`);
+            break;
           default:
             router.push(`/explore/${id}`);
             break;

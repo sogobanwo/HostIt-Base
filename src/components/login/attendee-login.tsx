@@ -32,7 +32,7 @@ const AttendeeLogin = () => {
         Attendee
       </h1>
       <div className="flex flex-col items-center justify-center">
-        <Card className="w-[50%] my-4 bg-transparent border border-subsidiary p-8 relative flex justify-center items-center">
+        <Card className="w-[85%] md:w-[50%] my-4 bg-transparent border border-subsidiary p-8 relative flex justify-center items-center">
           <div className="absolute top-0 left-0 p-4">
             <FaUsersRectangle
               size={50}

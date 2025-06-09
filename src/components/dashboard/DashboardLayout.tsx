@@ -11,7 +11,7 @@ const DashboardLayout = (props: Props) => {
     <>
     <Header />
     <Sidebar />
-    <div className='w-[93%] ml-[7%] mt-[12vh]'>
+    <div className='w-[94%] mx-auto md:w-[93%] md:ml-[7%] mt-[14vh] md:mt-[12vh]'>
     {props.children}
     </div>
     </>

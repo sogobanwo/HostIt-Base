@@ -22,7 +22,6 @@ import { PiBroadcast } from "react-icons/pi";
 import { PiUploadSimpleThin } from "react-icons/pi";
 import { TbMessageOff } from "react-icons/tb";
 import MerchCard from "@/components/dashboard/MerchCard";
-import { FaUserAltSlash } from "react-icons/fa";
 import { MdOutlineQrCodeScanner } from "react-icons/md";
 import { Input } from "@/components/ui/input";
 import { MdAnalytics } from "react-icons/md";
@@ -35,122 +34,142 @@ const Page = () => {
 
   return (
     <Tabs defaultValue="details" className="w-full">
-      <div className="mx-8 2xl:mx-12">
-        <div className="flex gap-12 w-full">
-          <div className="flex items-center justify-between w-2/3 mr-5">
+      <div className="mx-4 sm:mx-6 md:mx-8 2xl:mx-12">
+        {/* Header Section - Mobile First */}
+        <div className="flex flex-col gap-4 md:flex-row md:gap-12 w-full">
+          {/* Navigation and Tabs */}
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between md:w-2/3 md:mr-5">
             <div
               className="h-10 flex justify-center items-center w-16 rounded-lg font-semibold bg-subsidiary hover:bg-white hover:text-subsidiary hover:cursor-pointer text-white"
               onClick={() => router.back()}
             >
               <IoIosArrowRoundBack size={40} />
             </div>
-            <TabsList className="flex gap-6 bg-transparent border-subsidiary border h-12">
-              <TabsTrigger
-                value="details"
-                className="flex gap-1 text-center items-center justify-center"
-              >
-                <BsFolder size={20} />
-                Details
-              </TabsTrigger>
-              <TabsTrigger
-                value="live-updates"
-                className="flex gap-1 text-center items-center justify-center"
-              >
-                <PiBroadcast size={20} />
-                Live Updates
-              </TabsTrigger>
-              <TabsTrigger
-                value="merch"
-                className="flex gap-1 text-center items-center justify-center"
-              >
-                <IoCartOutline size={20} />
-                Merch
-              </TabsTrigger>
-              <TabsTrigger
-                value="role"
-                className="flex gap-1 text-center items-center justify-center"
-              >
-                <RiShieldUserLine size={20} />
-                Role
-              </TabsTrigger>
-            </TabsList>
+            
+            {/* Mobile Tabs - Horizontal scroll */}
+            <div className="w-full sm:w-auto overflow-x-auto">
+              <TabsList className="flex gap-2 sm:gap-6 bg-transparent border-subsidiary border h-12 min-w-max">
+                <TabsTrigger
+                  value="details"
+                  className="flex gap-1 text-center items-center justify-center text-xs sm:text-sm whitespace-nowrap px-2 sm:px-4"
+                >
+                  <BsFolder size={16} className="sm:w-5 sm:h-5" />
+                  <span className="sm:inline">Details</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="live-updates"
+                  className="flex gap-1 text-center items-center justify-center text-xs sm:text-sm whitespace-nowrap px-2 sm:px-4"
+                >
+                  <PiBroadcast size={16} className="sm:w-5 sm:h-5" />
+                  <span className="sm:inline">Live Updates</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="merch"
+                  className="flex gap-1 text-center items-center justify-center text-xs sm:text-sm whitespace-nowrap px-2 sm:px-4"
+                >
+                  <IoCartOutline size={16} className="sm:w-5 sm:h-5" />
+                  <span className="sm:inline">Merch</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="role"
+                  className="flex gap-1 text-center items-center justify-center text-xs sm:text-sm whitespace-nowrap px-2 sm:px-4"
+                >
+                  <RiShieldUserLine size={16} className="sm:w-5 sm:h-5" />
+                  <span className="sm:inline">Role</span>
+                </TabsTrigger>
+              </TabsList>
+            </div>
           </div>
-          <div className="w-1/3 2xl:px-6 flex items-center justify-end italic">
-            <p className="text-white font-medium 2xl:text-xl py-2 px-6 rounded-lg border-2 text-lg">
+          
+          {/* Countdown */}
+          <div className="w-full md:w-1/3 2xl:px-6 flex items-center justify-end italic">
+            <p className="text-white font-medium text-sm sm:text-lg 2xl:text-xl py-2 px-4 sm:px-6 rounded-lg border-2">
               14 days to go
             </p>
           </div>
         </div>
+
+        {/* Details Tab Content */}
         <TabsContent value="details" className="min-h-[82vh]">
-          <div className="flex gap-12 my-4">
-            <div className="w-2/3 relative">
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-12 my-4">
+            {/* Main Content - Left Side */}
+            <div className="w-full lg:w-2/3 relative">
               <img
                 src="/event-image.png"
                 alt="event-image"
-                className="w-full rounded-3xl 2xl:h-64 h-56 object-cover"
+                className="w-full rounded-3xl h-48 sm:h-56 2xl:h-64 object-cover"
               />
 
-              <div className="absolute top-4 left-4 px-4 py-1 rounded-full font-semibold text-base z-10 border-2 border-white bg-[#13193980] text-white">
+              <div className="absolute top-4 left-4 px-3 sm:px-4 py-1 rounded-full font-semibold text-sm sm:text-base z-10 border-2 border-white bg-[#13193980] text-white">
                 {currentEvent?.isFree ? "Free" : "Paid"}
               </div>
-              <div className="2xl:my-10 my-6 border-2 border-subsidiary rounded-full 2xl:w-96 w-72 flex justify-center items-center h-12 2xl:h-14">
-                <h1 className="text-xl font-semibold bg-gradient-to-r from-[#007CFA] from-30% to-white to-95% bg-clip-text text-transparent uppercase">
+              
+              <div className="my-6 2xl:my-10 border-2 border-subsidiary rounded-full w-full sm:w-72 2xl:w-96 flex justify-center items-center h-12 2xl:h-14 mx-auto lg:mx-0">
+                <h1 className="text-lg sm:text-xl font-semibold bg-gradient-to-r from-[#007CFA] from-30% to-white to-95% bg-clip-text text-transparent uppercase">
                   Description
                 </h1>
               </div>
-              <p className="text-white 2xl:text-xl text-lg">
+              
+              <p className="text-white text-base sm:text-lg 2xl:text-xl">
                 {currentEvent?.description}
               </p>
             </div>
-            <div className="w-1/3 2xl:px-6 flex flex-col 2xl:gap-6 gap-4">
+
+            {/* Sidebar - Right Side */}
+            <div className="w-full lg:w-1/3 2xl:px-6 flex flex-col gap-4 2xl:gap-6 mb-14 md:mb-0">
+              {/* Event Title and Date */}
               <div>
-                <h1 className="2xl:text-3xl text-2xl font-semibold bg-gradient-to-r from-[#007CFA] from-30% to-white to-95% bg-clip-text text-transparent">
+                <h1 className="text-xl sm:text-2xl 2xl:text-3xl font-semibold bg-gradient-to-r from-[#007CFA] from-30% to-white to-95% bg-clip-text text-transparent">
                   {currentEvent?.name}
                 </h1>
-                <div className="flex gap-4 items-center">
-                  <p className="uppercase 2xl:text-lg text-base text-white">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 items-start sm:items-center">
+                  <p className="uppercase text-sm sm:text-base 2xl:text-lg text-white">
                     {convertDateFormat(currentEvent?.date as string)}
                   </p>
-                  <GoDotFill className="text-white text-xl" />
-                  <p className="uppercase 2xl:text-lg text-base text-white">
+                  <GoDotFill className="text-white text-xl hidden sm:block" />
+                  <p className="uppercase text-sm sm:text-base 2xl:text-lg text-white">
                     {currentEvent?.time}
                   </p>
                 </div>
               </div>
-              <TicketPoap isTicket />
-              <div className="flex items-center justify-end gap-4">
-                <div className="bg-subsidiary flex justify-center items-center rounded-full h-12 w-12 2xl:h-14 2xl:w-14">
-                  <FaBookmark
-                    className="2xl:w-[30px] 2xl:h-[30px] w-[25px] h-[25px]"
-                    color={"#FFFFFF"}
-                  />
+
+              {/* Ticket POAP */}
+              <TicketPoap isTicket isAttendee={true} />
+
+              {/* Action Buttons */}
+              <div className="flex flex-row items-center justify-end gap-4">
+                <div className="flex gap-4">
+                  <div className="bg-subsidiary flex justify-center items-center rounded-full h-12 w-12 2xl:h-14 2xl:w-14">
+                    <FaBookmark
+                      className="w-[20px] h-[20px] sm:w-[25px] sm:h-[25px] 2xl:w-[30px] 2xl:h-[30px]"
+                      color={"#FFFFFF"}
+                    />
+                  </div>
+                  <div className="bg-subsidiary flex justify-center items-center rounded-full h-12 w-12 2xl:h-14 2xl:w-14">
+                    <IoIosShareAlt
+                      className="w-[20px] h-[20px] sm:w-[25px] sm:h-[25px] 2xl:w-[30px] 2xl:h-[30px]"
+                      color={"#FFFFFF"}
+                    />
+                  </div>
                 </div>
-                <div className="bg-subsidiary flex justify-center items-center rounded-full h-12 w-12 2xl:h-14 2xl:w-14">
-                  <IoIosShareAlt
-                    className="2xl:w-[30px] 2xl:h-[30px] w-[25px] h-[25px]"
-                    color={"#FFFFFF"}
-                  />
-                </div>
+                
                 <Dialog>
                   <DialogTrigger
-                    className="2xl:text-lg text-sm h-12 2xl:h-14 2xl:w-56 w-48 rounded-lg bg-subsidiary hover:bg-white hover:text-subsidiary text-white font-semibold"
+                    className="text-sm 2xl:text-lg h-12 2xl:h-14 w-full sm:w-48 2xl:w-56 rounded-lg bg-subsidiary hover:bg-white hover:text-subsidiary text-white font-semibold"
                     disabled
                   >
                     Claim Refund
                   </DialogTrigger>
-                  <DialogContent className="border bg-principal border-subsidiary rounded-3xl p-0">
-                    <div
-                      className="p-12 rounded-t-3xl
-             bg-subsidiary w-full flex justify-center items-center"
-                    >
-                      <GiPadlock color="#ffffff" size={72} />
+                  <DialogContent className="border bg-principal border-subsidiary rounded-3xl p-0 mx-4 max-w-md">
+                    <div className="p-8 sm:p-12 rounded-t-3xl bg-subsidiary w-full flex justify-center items-center">
+                      <GiPadlock color="#ffffff" size={60} className="sm:w-[72px] sm:h-[72px]" />
                     </div>
-                    <div className="p-8 flex flex-col justify-center items-center gap-4">
-                      <h1 className="text-3xl font-bold bg-gradient-to-r from-[#007CFA] from-30% to-white to-95% bg-clip-text text-transparent">
+                    <div className="p-6 sm:p-8 flex flex-col justify-center items-center gap-4">
+                      <h1 className="text-xl sm:text-3xl font-bold bg-gradient-to-r from-[#007CFA] from-30% to-white to-95% bg-clip-text text-transparent text-center">
                         This event has been cancelled
                       </h1>
                       <Button
-                        className="2xl:text-lg text-sm h-12 2xl:h-14 w-52 font-semibold bg-subsidiary hover:bg-white hover:text-subsidiary rounded-xl"
+                        className="text-sm 2xl:text-lg h-12 2xl:h-14 w-52 font-semibold bg-subsidiary hover:bg-white hover:text-subsidiary rounded-xl"
                         onClick={() => {
                           router.push("/attendee-login");
                         }}
@@ -161,28 +180,24 @@ const Page = () => {
                   </DialogContent>
                 </Dialog>
               </div>
-              <div className="flex gap-2 2xl:h-full">
-                <div className="w-1/2 h-full">
-                  <GooMap />
-                </div>
-                <div className="w-1/2 h-full flex justify-center items-center">
+
+              {/* Map and QR Code Section */}
+              <div className="flex flex-col sm:flex-row gap-4 h-48 sm:h-full">
+                <GooMap />
+                <div className="w-full sm:w-1/2 h-full flex justify-center items-center min-h-[200px]">
                   <div className="relative flex items-center justify-center w-full h-full">
-                    {/* Outer container for the ticket */}
                     <div className="flex w-full h-full relative">
-                      {/* Ticket border image */}
                       <img
                         src="/TicketBorder.png"
                         alt="ticket-border"
-                        className="w-full h-full"
+                        className="hidden md:block w-full h-full"
                       />
-
-                      {/* QR code container - positioned absolutely to center over the image */}
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="flex flex-col gap-1 items-center bg-white px-3 border-gray-400 rounded-xl 2xl:m-8 m-4">
+                        <div className="flex flex-col gap-1 items-center bg-white px-2 sm:px-3 border-gray-400 rounded-xl m-2 sm:m-4 2xl:m-8">
                           <QRCode
                             value={"ticketData"}
-                            className="w-full"
-                            size={200}
+                            className="w-full h-full"
+                            size={120}
                           />
                         </div>
                       </div>
@@ -190,25 +205,30 @@ const Page = () => {
                   </div>
                 </div>
               </div>
-              <TicketPoap isTicket={false} />
+
+              {/* POAP Section */}
+              <TicketPoap isTicket={false} isAttendee={true} />
             </div>
           </div>
         </TabsContent>
+
+        {/* Live Updates Tab Content */}
         <TabsContent value="live-updates" className="min-h-[82vh]">
           <div>
-            <h1 className="text-2xl font-semibold bg-gradient-to-r from-[#007CFA] from-30% to-white to-95% bg-clip-text text-transparent inline-flex my-4">
+            <h1 className="text-xl sm:text-2xl font-semibold bg-gradient-to-r from-[#007CFA] from-30% to-white to-95% bg-clip-text text-transparent inline-flex my-4">
               Media Library
             </h1>
-            <div className="flex justify-between items-end">
-              <div className="flex gap-4">
+            
+            <div className="flex flex-col gap-4 lg:flex-row lg:justify-between lg:items-end">
+              <div className="flex flex-col sm:flex-row gap-4">
                 <div
-                  className={`flex flex-col justify-center items-center rounded-xl h-32 w-52 border-subsidiary border cursor-pointer hover:bg-subsidiary ${
+                  className={`flex flex-col justify-center items-center rounded-xl h-32 w-full sm:w-52 border-subsidiary border cursor-pointer hover:bg-subsidiary ${
                     uploadImage ? "bg-subsidiary" : "bg-transparent"
                   }`}
                   onClick={() => setUploadImage(true)}
                 >
                   <h3
-                    className={`font-semibold ${
+                    className={`font-semibold text-sm sm:text-base text-center ${
                       uploadImage
                         ? "text-white"
                         : "bg-transparent bg-gradient-to-r from-[#007CFA] from-30% to-white to-95% bg-clip-text text-transparent"
@@ -216,16 +236,16 @@ const Page = () => {
                   >
                     Uploaded Images
                   </h3>
-                  <p className="text-white text-4xl">200</p>
+                  <p className="text-white text-3xl sm:text-4xl">200</p>
                 </div>
                 <div
-                  className={`flex flex-col justify-center items-center rounded-xl h-32 w-52 border-subsidiary border cursor-pointer hover:bg-subsidiary ${
+                  className={`flex flex-col justify-center items-center rounded-xl h-32 w-full sm:w-52 border-subsidiary border cursor-pointer hover:bg-subsidiary ${
                     !uploadImage ? "bg-subsidiary" : "bg-transparent"
                   }`}
                   onClick={() => setUploadImage(false)}
                 >
                   <h3
-                    className={`font-semibold ${
+                    className={`font-semibold text-sm sm:text-base text-center ${
                       !uploadImage
                         ? "text-white"
                         : "bg-transparent bg-gradient-to-r from-[#007CFA] from-30% to-white to-95% bg-clip-text text-transparent"
@@ -233,19 +253,20 @@ const Page = () => {
                   >
                     Feedbacks
                   </h3>
-                  <p className="text-white text-4xl">0</p>
+                  <p className="text-white text-3xl sm:text-4xl">0</p>
                 </div>
               </div>
+              
               {uploadImage ? (
                 <Button
-                  className="2xl:text-lg 2xl:mr-6 text-sm h-12 2xl:h-14 w-56 font-semibold rounded-lg bg-subsidiary hover:bg-white hover:text-subsidiary text-white cursor-pointer"
+                  className="text-sm 2xl:text-lg h-12 2xl:h-14 w-full sm:w-56 font-semibold rounded-lg bg-subsidiary hover:bg-white hover:text-subsidiary text-white cursor-pointer mt-4 lg:mt-0 2xl:mr-6"
                   disabled
                 >
                   Upload Media
                 </Button>
               ) : (
                 <Button
-                  className="2xl:text-lg 2xl:mr-6 text-sm h-12 2xl:h-14 w-56 font-semibold rounded-lg bg-subsidiary hover:bg-white hover:text-subsidiary text-white cursor-pointer"
+                  className="text-sm 2xl:text-lg h-12 2xl:h-14 w-full sm:w-56 font-semibold rounded-lg bg-subsidiary hover:bg-white hover:text-subsidiary text-white cursor-pointer mt-4 lg:mt-0 2xl:mr-6"
                   disabled
                 >
                   Post a Feedback
@@ -254,35 +275,34 @@ const Page = () => {
             </div>
 
             {uploadImage ? (
-              <div className="2xl:min-h-[50vh] min-h-[650px] flex flex-col gap-10 justify-center items-center">
-                <div className="flex flex-col gap-10 justify-center items-center">
-                  <ul className="flex flex-col gap-2 text-white">
-                    <li className="flex items-center gap-2">
-                      <GoDotFill /> Upload clear, high-quality images (no blurry
-                      or low-light shots).
+              <div className="min-h-[400px] sm:min-h-[650px] 2xl:min-h-[50vh] flex flex-col gap-6 sm:gap-10 justify-center items-center">
+                <div className="flex flex-col gap-6 sm:gap-10 justify-center items-center px-4 my-20">
+                  <ul className="flex flex-col gap-2 text-white text-sm sm:text-base">
+                    <li className="flex items-start gap-2">
+                      <GoDotFill className="mt-1 flex-shrink-0" /> 
+                      Upload clear, high-quality images (no blurry or low-light shots).
                     </li>
-                    <li className="flex items-center gap-2">
-                      <GoDotFill />
-                      Showcase key moments: speakers, crowds, performances, and
-                      highlights.
+                    <li className="flex items-start gap-2">
+                      <GoDotFill className="mt-1 flex-shrink-0" />
+                      Showcase key moments: speakers, crowds, performances, and highlights.
                     </li>
-                    <li className="flex items-center gap-2">
-                      <GoDotFill />
-                      Use real-time photos that reflect the true vibe of the
-                      event.
+                    <li className="flex items-start gap-2">
+                      <GoDotFill className="mt-1 flex-shrink-0" />
+                      Use real-time photos that reflect the true vibe of the event.
                     </li>
-                    <li className="flex items-center gap-2">
-                      <GoDotFill />
+                    <li className="flex items-start gap-2">
+                      <GoDotFill className="mt-1 flex-shrink-0" />
                       Formats supported: JPG, PNG. Max size: 10MB per image.
                     </li>
                   </ul>
-                  <div className="flex flex-col p-4 border border-dashed border-subsidiary rounded-2xl justify-center items-center w-[540px] h-[320px]">
-                    <PiUploadSimpleThin size={80} color="#ffffff" />
-                    <h1 className="text-2xl font-semibold bg-gradient-to-r from-[#007CFA] from-30% to-white to-95% bg-clip-text text-transparent inline-flex my-4">
+                  
+                  <div className="flex flex-col p-4 border border-dashed border-subsidiary rounded-2xl justify-center items-center w-full max-w-[540px] h-[250px] sm:h-[320px]">
+                    <PiUploadSimpleThin size={60} className="sm:w-[80px] sm:h-[80px]" color="#ffffff" />
+                    <h1 className="text-lg sm:text-2xl font-semibold bg-gradient-to-r from-[#007CFA] from-30% to-white to-95% bg-clip-text text-transparent inline-flex my-4 text-center">
                       Upload Media
                     </h1>
                     <Button
-                      className="2xl:text-lg text-sm h-12 2xl:h-14 w-56 font-semibold rounded-lg bg-subsidiary hover:bg-white hover:text-subsidiary text-white cursor-pointer"
+                      className="text-sm 2xl:text-lg h-12 2xl:h-14 w-full sm:w-56 font-semibold rounded-lg bg-subsidiary hover:bg-white hover:text-subsidiary text-white cursor-pointer"
                       disabled
                     >
                       Upload
@@ -291,77 +311,79 @@ const Page = () => {
                 </div>
               </div>
             ) : (
-              <div className="2xl:min-h-[50vh] min-h-[430px] flex flex-col gap-10 justify-center items-center">
+              <div className="min-h-[400px] sm:min-h-[430px] 2xl:min-h-[50vh] flex flex-col gap-6 sm:gap-10 justify-center items-center">
                 <div className="flex flex-col justify-center items-center">
-                  <TbMessageOff size={150} />
-                  <p className="text-white text-xl">No feedbacks yet</p>
+                  <TbMessageOff size={120} className="sm:w-[150px] sm:h-[150px]" />
+                  <p className="text-white text-lg sm:text-xl">No feedbacks yet</p>
                 </div>
               </div>
             )}
           </div>
         </TabsContent>
+
+        {/* Merch Tab Content */}
         <TabsContent value="merch" className="">
           <div>
-            <h1 className="text-2xl font-semibold bg-gradient-to-r from-[#007CFA] from-30% to-white to-95% bg-clip-text text-transparent inline-flex my-4">
+            <h1 className="text-xl sm:text-2xl font-semibold bg-gradient-to-r from-[#007CFA] from-30% to-white to-95% bg-clip-text text-transparent inline-flex my-4">
               Merchandise
             </h1>
-            <div className="flex flex-wrap lg:gap-[1.3%]">
-              <div className="2xl:w-[24%] lg:w-[32%] mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-[1.3%] mb-10 md:mb-0">
+              <div className="mb-6">
                 <MerchCard />
               </div>
             </div>
           </div>
         </TabsContent>
+
+        {/* Role Tab Content */}
         <TabsContent value="role" className="min-h-[82vh]">
           <div>
-            <h1 className="text-2xl font-semibold bg-gradient-to-r from-[#007CFA] from-30% to-white to-95% bg-clip-text text-transparent inline-flex my-4">
+            <h1 className="text-xl sm:text-2xl font-semibold bg-gradient-to-r from-[#007CFA] from-30% to-white to-95% bg-clip-text text-transparent inline-flex my-4">
               Assigned Role
             </h1>
-            {/* <div className="2xl:min-h-[50vh] min-h-[430px] flex flex-col gap-10 justify-center items-center">
-              <div className="flex flex-col justify-center items-center border border-subsidiary rounded-2xl p-10">
-                <FaUserAltSlash size={200} />
-                <p className="text-white text-xl">No Roles Assigned</p>
-              </div>
-            </div> */}
-            <div className="border boder-white rounded-3xl flex gap-10 w-full py-7 px-7">
-              <div className="w-3/5 flex flex-col gap-6">
+            
+            <div className="border border-white rounded-3xl flex flex-col lg:flex-row gap-6 lg:gap-10 w-full py-6 sm:py-7 px-4 sm:px-7 mb-40">
+              <div className="w-full lg:w-3/5 flex flex-col gap-4 sm:gap-6">
                 <div className="flex justify-between items-start">
-                  <h1 className="text-2xl font-bold">CHECKIN ASSISTANT</h1>
-                  <MdOutlineQrCodeScanner size={40} />
+                  <h1 className="text-lg sm:text-2xl font-bold text-white">CHECKIN ASSISTANT</h1>
+                  <MdOutlineQrCodeScanner size={30} className="sm:w-[40px] sm:h-[40px] text-white" />
                 </div>
+                
                 <ul className="flex flex-col gap-2 text-white">
-                  <li className="flex items-center gap-2 text-xs">
-                    <GoDotFill /> Search by attendee email address or scan their
-                    QR code to locate their ticket
+                  <li className="flex items-start gap-2 text-xs sm:text-sm">
+                    <GoDotFill className="mt-1 flex-shrink-0" /> 
+                    Search by attendee email address or scan their QR code to locate their ticket
                   </li>
-                  <li className="flex items-center gap-2 text-xs">
-                    <GoDotFill />
-                    Check in attendee and wait for on-chain confirmation .
+                  <li className="flex items-start gap-2 text-xs sm:text-sm">
+                    <GoDotFill className="mt-1 flex-shrink-0" />
+                    Check in attendee and wait for on-chain confirmation.
                   </li>
                 </ul>
-                <div className="flex gap-3">
+                
+                <div className="flex flex-col sm:flex-row gap-3">
                   <Input
-                    placeholder="Enter attendee’s email address"
-                    className="w-3/4 h-12 px-10"
+                    placeholder="Enter attendee's email address"
+                    className="w-full sm:w-3/4 h-12 px-4 sm:px-10 text-sm"
                   />
-                  <Button className="w-1/4 py-4 bg-subsidiary h-12" disabled>
+                  <Button className="w-full sm:w-1/4 py-4 bg-subsidiary h-12" disabled>
                     Search
                   </Button>
                 </div>
               </div>
-              <div className="w-2/5 flex flex-col justify-between py-6 px-8 rounded-xl bg-subsidiary text-white">
-                <div className="flex items-center gap-2">
+              
+              <div className="w-full lg:w-2/5 flex flex-col justify-between py-4 sm:py-6 px-4 sm:px-8 rounded-xl bg-subsidiary text-white">
+                <div className="flex items-center gap-2 mb-4 lg:mb-0">
                   <MdAnalytics size={20} />
-                  <p className="text-lg text-white">TRACKER</p>
+                  <p className="text-base sm:text-lg text-white">TRACKER</p>
                 </div>
                 <div className="flex justify-between">
                   <div className="flex flex-col items-start">
-                    <h1 className="text-4xl font-bold text-white">1500</h1>
-                    <p className="text-xs">Registered</p>
+                    <h1 className="text-3xl sm:text-4xl font-bold text-white">1500</h1>
+                    <p className="text-xs text-white">Registered</p>
                   </div>
                   <div className="flex flex-col items-end">
-                    <h1 className="text-4xl font-bold text-white">0</h1>
-                    <p className="text-xs">Verified</p>
+                    <h1 className="text-3xl sm:text-4xl font-bold text-white">0</h1>
+                    <p className="text-xs text-white">Verified</p>
                   </div>
                 </div>
               </div>

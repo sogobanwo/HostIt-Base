@@ -32,16 +32,16 @@ const OrganizerLogin = () => {
         Organizer
       </h1>
       <div className="flex flex-col items-center justify-center">
-        <Card className="w-[50%] my-4 bg-transparent border border-subsidiary p-8 relative flex justify-center items-center">
+        <Card className="w-[85%] md:w-[50%]  my-4 bg-transparent border border-subsidiary p-8 relative flex justify-center items-center">
           <div className="absolute top-0 left-0 p-4">
             <FaUsersRectangle
               size={50}
               className="text-subsidiary group-hover:text-white -ml-8 -mt-8 -rotate-45"
             />
           </div>
-          <Button className="2xl:text-xl text-lg h-12 2xl:h-14 w-full font-semibold rounded-lg bg-subsidiary hover:bg-white hover:text-subsidiary text-white">
+          <Button className="2xl:text-xl text-lg h-12 2xl:h-14 w-full font-semibold rounded-lg bg-subsidiary hover:bg-white hover:text-subsidiary text-white" onClick={()=>router.push("/dashboard/organizer/create-event")}>
             Log in
-          </Button>
+          </Button >
         </Card>
         <p className="2xl:text-2xl text-xl font-semibold">
           Attending an event?{" "}

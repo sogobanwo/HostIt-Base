@@ -143,8 +143,6 @@ body {
   font-family: 'Aeonik-light', sans-serif;
 }
 
-
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -152,4 +150,8 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
 }
