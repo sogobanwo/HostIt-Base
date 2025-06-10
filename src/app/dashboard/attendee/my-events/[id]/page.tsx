@@ -182,15 +182,19 @@ const Page = () => {
               </div>
 
               {/* Map and QR Code Section */}
-              <div className="flex flex-col sm:flex-row gap-4 h-48 sm:h-full">
+              <div className="flex flex-col sm:flex-row gap-4 md:h-48 h-full">
                 <GooMap />
-                <div className="w-full sm:w-1/2 h-full flex justify-center items-center min-h-[200px]">
+                <div>
+                  <QRCode value={"ticketData"}
+                            className="w-full h-full bg-white p-5 rounded-2xl"/>
+                </div>
+                <div className="hidden w-full sm:w-1/2 h-full md:flex justify-center items-center min-h-[200px]">
                   <div className="relative flex items-center justify-center w-full h-full">
                     <div className="flex w-full h-full relative">
                       <img
                         src="/TicketBorder.png"
                         alt="ticket-border"
-                        className="hidden md:block w-full h-full"
+                        className="md:block w-full h-full"
                       />
                       <div className="absolute inset-0 flex items-center justify-center">
                         <div className="flex flex-col gap-1 items-center bg-white px-2 sm:px-3 border-gray-400 rounded-xl m-2 sm:m-4 2xl:m-8">
@@ -336,13 +340,13 @@ const Page = () => {
         </TabsContent>
 
         {/* Role Tab Content */}
-        <TabsContent value="role" className="min-h-[82vh]">
+        <TabsContent value="role" className="min-h-[82vh] mb-6 md:mb-0">
           <div>
             <h1 className="text-xl sm:text-2xl font-semibold bg-gradient-to-r from-[#007CFA] from-30% to-white to-95% bg-clip-text text-transparent inline-flex my-4">
               Assigned Role
             </h1>
             
-            <div className="border border-white rounded-3xl flex flex-col lg:flex-row gap-6 lg:gap-10 w-full py-6 sm:py-7 px-4 sm:px-7 mb-40">
+            <div className="border border-white rounded-3xl flex flex-col lg:flex-row gap-6 lg:gap-10 w-full py-6 sm:py-7 px-4 sm:px-7">
               <div className="w-full lg:w-3/5 flex flex-col gap-4 sm:gap-6">
                 <div className="flex justify-between items-start">
                   <h1 className="text-lg sm:text-2xl font-bold text-white">CHECKIN ASSISTANT</h1>

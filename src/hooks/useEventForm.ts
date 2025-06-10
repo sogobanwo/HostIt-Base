@@ -129,11 +129,15 @@ export const useEventForm = () => {
     }));
 
     // Clear ticket-specific error for the updated field
-    if (errors.ticketErrors?.[id]?.[field]) {
+    // Fix for Error 1: Exclude 'id' from the field check since it's not in the error object
+    if (field !== 'id' && errors.ticketErrors?.[id]?.[field as keyof Omit<TicketType, 'id'>]) {
       setErrors((prev) => {
         const newTicketErrors = { ...prev.ticketErrors };
         if (newTicketErrors[id]) {
-          newTicketErrors[id] = { ...newTicketErrors[id], [field]: undefined };
+          newTicketErrors[id] = { 
+            ...newTicketErrors[id], 
+            [field as keyof Omit<TicketType, 'id'>]: undefined 
+          };
         }
         return { ...prev, ticketErrors: newTicketErrors };
       });
@@ -149,9 +153,10 @@ export const useEventForm = () => {
     if (file && file.type.startsWith("image/")) {
       const reader = new FileReader();
       reader.onload = (e) => {
+        // Fix for Error 2: Add null check for e.target
         if (e.target?.result && typeof e.target.result === "string") {
           setSelectedImage(e.target.result);
-          setFormData((prev) => ({ ...prev, eventImage: e.target.result }));
+          setFormData((prev) => ({ ...prev, eventImage: e.target!.result as string}));
           if (errors.eventImage) {
             setErrors((prev) => ({ ...prev, eventImage: undefined }));
           }
