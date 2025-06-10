@@ -182,26 +182,28 @@ const Page = () => {
               </div>
 
               {/* Map and QR Code Section */}
-              <div className="flex flex-col sm:flex-row gap-4 md:h-48 h-full">
-                <GooMap />
-                <div>
+              <div className="flex flex-col sm:flex-row gap-4 md:min-h-48 h-full">
+                <div className="w-full sm:w-1/2 h-full">
+                   <GooMap />
+
+                </div>
+                <div className="md:hidden">
                   <QRCode value={"ticketData"}
                             className="w-full h-full bg-white p-5 rounded-2xl"/>
                 </div>
-                <div className="hidden w-full sm:w-1/2 h-full md:flex justify-center items-center min-h-[200px]">
+                <div className="hidden w-full sm:w-1/2 h-full md:flex justify-center items-center min-h-[200px] ">
                   <div className="relative flex items-center justify-center w-full h-full">
                     <div className="flex w-full h-full relative">
                       <img
                         src="/TicketBorder.png"
                         alt="ticket-border"
-                        className="md:block w-full h-full"
+                        className="md:block w-full h-full max-h-[330px]"
                       />
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="flex flex-col gap-1 items-center bg-white px-2 sm:px-3 border-gray-400 rounded-xl m-2 sm:m-4 2xl:m-8">
+                        <div className="flex flex-col gap-1 items-center bg-white px-2 sm:px-3 border-gray-400 rounded-xl m-2 sm:m-4 2xl:m-4">
                           <QRCode
                             value={"ticketData"}
-                            className="w-full h-full"
-                            size={120}
+                            className="w-full h-full max-h-[220px] p-3"
                           />
                         </div>
                       </div>
