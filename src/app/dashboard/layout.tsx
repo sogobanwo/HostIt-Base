@@ -1,16 +1,25 @@
-import DashboardLayout from '@/components/dashboard/DashboardLayout'
-import React from 'react'
+"use client";
+
+import DashboardLayout from "@/components/dashboard/DashboardLayout";
+import React, { use, useEffect } from "react";
+import { useDynamicContext, useIsLoggedIn } from "@dynamic-labs/sdk-react-core";
+import { useRouter } from "next/navigation";
 
 type Props = {
-    children: any
-}
+  children: any;
+};
 
 const layout = (props: Props) => {
-  return (
-    <DashboardLayout>
-      {props.children}
-    </DashboardLayout>
-  )
-}
+  const { sdkHasLoaded } = useDynamicContext();
+  const router = useRouter();
+  const isLoggedIn = useIsLoggedIn();
+  useEffect(() => {
+    if (sdkHasLoaded && !isLoggedIn) {
+      router.push("/explore");
+    }
+  }, [sdkHasLoaded, isLoggedIn, router]);
 
-export default layout
+  return <DashboardLayout>{props.children}</DashboardLayout>;
+};
+
+export default layout;
