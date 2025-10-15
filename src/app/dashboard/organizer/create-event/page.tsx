@@ -2,16 +2,27 @@
 
 import { Button } from "@/components/ui/button";
 import { useEventForm } from "@/hooks/useEventForm";
+import { useCreateEvent } from "@/hooks/useCreateEvent";
 import { Upload, Plus, X } from "lucide-react";
+import Switch from "@/components/ui/switch";
 import dynamic from "next/dynamic";
 import { MdAddLocationAlt } from "react-icons/md";
 import "react-quill/dist/quill.snow.css";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { useIsLoggedIn } from "@dynamic-labs/sdk-react-core";
+import Link from "next/link";
+import { MdEventBusy } from "react-icons/md";
+import { BsStars } from "react-icons/bs";
 
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
 });
 
 const Page = () => {
+  const createEventMutation = useCreateEvent();
+  const router = useRouter();
+  const isLoggedIn = useIsLoggedIn();
   const {
     formData,
     errors,
@@ -21,13 +32,94 @@ const Page = () => {
     handleInputChange,
     handleInputBlur,
     handleDescriptionChange,
+    handleToggleChange,
     handleTicketBlur,
     addTicketType,
     removeTicketType,
     updateTicketType,
     handleFileSelect,
     handleSubmit,
-  } = useEventForm();
+  } = useEventForm({
+    onValidSubmit: async (data) => {
+      const firstTicket = data.ticketTypes[0];
+      try {
+        // Upload image to IPFS if it's a data URL
+        let imageCid = "";
+        if (data.eventImage && data.eventImage.startsWith("data:")) {
+          const upRes = await fetch("/api/ipfs/upload", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ imageDataUrl: data.eventImage, name: data.eventName || "event-image" }),
+          });
+          if (!upRes.ok) {
+            const msg = await upRes.text();
+            throw new Error(`Failed to upload image to IPFS: ${msg}`);
+          }
+          const up = await upRes.json();
+          imageCid = up.cid;
+        } else if (data.eventImage && data.eventImage.startsWith("ipfs://")) {
+          imageCid = data.eventImage.replace("ipfs://", "");
+        } else if (data.eventImage && /\/ipfs\//.test(data.eventImage)) {
+          const m = data.eventImage.match(/\/ipfs\/([^/?]+)/);
+          imageCid = m?.[1] ?? data.eventImage;
+        } else {
+          imageCid = data.eventImage;
+        }
+
+        await createEventMutation.mutateAsync({
+          name: data.eventName,
+          image: imageCid,
+          description: data.description,
+          organizer_name: data.organizer,
+          event_type: data.eventType,
+          event_category: data.eventCategory,
+          location: data.location,
+          schedule: [],
+          ticketName: firstTicket.name,
+          ticketSymbol: "HIT",
+          ticketPriceEth: data.isFree ? "0" : firstTicket.price,
+          ticketQuantity: parseInt(firstTicket.quantity, 10),
+          startDateIso: data.startDate,
+          endDateIso: data.endDate,
+          maxTicketsPerUser: 1,
+          isRefundable: data.isRefundable,
+        });
+        toast.success("Event Created")
+        router.push("/dashboard/organizer/event-analytics")
+        // TODO: redirect or show success toast
+      } catch (err) {
+        console.error(err);
+      }
+    },
+  });
+
+  if (!isLoggedIn) {
+    return (
+      <div className="pb-24 relative min-h-[82vh] px-4 sm:px-6 md:px-8 lg:px-12 2xl:px-16 flex items-center justify-center">
+        <div className="text-center max-w-md">
+          <div className="mx-auto mb-6 w-24 h-24 rounded-full bg-[#131939] border border-subsidiary flex items-center justify-center shadow-[0_0_40px_#131939]">
+            <MdEventBusy size={38} className="text-white" />
+          </div>
+          <h2 className="text-white text-2xl font-semibold Aeonik-bold flex items-center justify-center gap-2">
+            No access <BsStars className="text-indigo-300" />
+          </h2>
+          <p className="text-white/70 text-sm mt-2">Login to create your event.</p>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+            <Link href="/organizer-login" className="inline-flex">
+              <button className="px-4 py-2 rounded-full bg-white text-black font-medium hover:opacity-90 transition">
+                Organizer login
+              </button>
+            </Link>
+            <Link href="/attendee-login" className="inline-flex">
+              <button className="px-4 py-2 rounded-full border border-white text-white font-medium hover:bg-white/10 transition">
+                Attendee login
+              </button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col lg:flex-row gap-6 mx-auto w-full max-w-[1200px] p-4 md:p-6 mb-14">
@@ -212,6 +304,28 @@ const Page = () => {
             </button>
           </div>
 
+          {/* Toggles: Free / Refundable (Switch) */}
+
+          {/* Toggles: Free / Refundable */}
+          <div className="flex flex-col sm:flex-row gap-4 sm:items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Switch
+                checked={formData.isFree}
+                onCheckedChange={(val) => handleToggleChange("isFree", val)}
+                size="lg"
+                label="Free Event"
+              />
+            </div>
+            <div className="flex items-center gap-3">
+              <Switch
+                checked={formData.isRefundable}
+                onCheckedChange={(val) => handleToggleChange("isRefundable", val)}
+                size="lg"
+                label="Refundable"
+              />
+            </div>
+          </div>
+
           {formData.ticketTypes.map((ticket) => (
             <div key={ticket.id} className="flex flex-col sm:flex-row gap-3">
               {/* Ticket Name Input */}
@@ -235,28 +349,36 @@ const Page = () => {
                 )}
               </div>
 
-              {/* Ticket Price Input */}
-              <div className="flex-1">
-                <input
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  value={ticket.price}
-                  onChange={(e) =>
-                    updateTicketType(ticket.id, "price", e.target.value)
-                  }
-                  onBlur={() => handleTicketBlur(ticket.id, "price")}
-                  placeholder="Ticket price"
-                  className={`w-full bg-transparent border-[0.5px] ${
-                    errors.ticketErrors?.[ticket.id]?.price && touched[`ticket_${ticket.id}_price`]
-                      ? "border-red-400"
-                      : "border-white/60"
-                  } h-14 md:h-16 text-base md:text-lg p-4 rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/80`}
-                />
-                {errors.ticketErrors?.[ticket.id]?.price && touched[`ticket_${ticket.id}_price`] && (
-                  <p className="text-red-400 text-sm">{errors.ticketErrors[ticket.id].price}</p>
-                )}
-              </div>
+              {/* Ticket Price Input (hidden/disabled when free) */}
+              {formData.isFree ? (
+                <div className="flex-1">
+                  <div className="w-full h-14 md:h-16 flex items-center justify-center rounded-xl border-[0.5px] border-white/60 text-white bg-[#13193980]">
+                    Free
+                  </div>
+                </div>
+              ) : (
+                <div className="flex-1">
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={ticket.price}
+                    onChange={(e) =>
+                      updateTicketType(ticket.id, "price", e.target.value)
+                    }
+                    onBlur={() => handleTicketBlur(ticket.id, "price")}
+                    placeholder="Ticket price"
+                    className={`w-full bg-transparent border-[0.5px] ${
+                      errors.ticketErrors?.[ticket.id]?.price && touched[`ticket_${ticket.id}_price`]
+                        ? "border-red-400"
+                        : "border-white/60"
+                    } h-14 md:h-16 text-base md:text-lg p-4 rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/80`}
+                  />
+                  {errors.ticketErrors?.[ticket.id]?.price && touched[`ticket_${ticket.id}_price`] && (
+                    <p className="text-red-400 text-sm">{errors.ticketErrors[ticket.id].price}</p>
+                  )}
+                </div>
+              )}
 
               {/* Ticket Quantity Input */}
               <div className="flex-1">
@@ -322,17 +444,42 @@ const Page = () => {
 
         {/* Submit Button */}
         <div className="md:col-span-2 flex flex-col gap-3">
-          <Button
-            onClick={handleSubmit}
-            className={`p-4 md:p-6 text-white font-bold text-base md:text-lg transition-all duration-200 ${
-              Object.keys(errors).length === 0 && formData.eventImage
-                ? "bg-subsidiary hover:bg-subsidiary/80 hover:scale-105 cursor-pointer"
-                : "bg-gray-600 cursor-not-allowed opacity-50"
-            }`}
-            disabled={Object.keys(errors).length > 0 || !formData.eventImage}
-          >
-            Create Event
-          </Button>
+          {(() => {
+            const plain = formData.description.replace(/<[^>]*>/g, "").trim();
+            const hasTicket = formData.ticketTypes.some((t) => {
+              const qtyOk = parseInt(t.quantity) > 0;
+              const priceOk = formData.isFree ? true : parseFloat(t.price) > 0;
+              return t.name.trim() && qtyOk && priceOk;
+            });
+            const start = formData.startDate ? new Date(formData.startDate) : null;
+            const end = formData.endDate ? new Date(formData.endDate) : null;
+            const now = new Date();
+            const datesOk = Boolean(start && end && start >= now && end > start);
+            const hasRequired = Boolean(
+              formData.eventName.trim().length >= 3 &&
+              formData.organizer.trim() &&
+              formData.location.trim() &&
+              formData.eventType &&
+              formData.eventImage &&
+              plain.length >= 10 &&
+              datesOk &&
+              hasTicket
+            );
+            const canCreate = hasRequired && !createEventMutation.isPending;
+            return (
+              <Button
+                onClick={handleSubmit}
+                className={`p-4 md:p-6 text-white font-bold text-base md:text-lg transition-all duration-200 ${
+                  canCreate
+                    ? "bg-subsidiary hover:bg-subsidiary/80 hover:scale-105 cursor-pointer"
+                    : "bg-gray-600 cursor-not-allowed opacity-50"
+                }`}
+                disabled={!canCreate}
+              >
+                {createEventMutation.isPending ? "Creating..." : "Create Event"}
+              </Button>
+            );
+          })()}
         </div>
       </div>
 

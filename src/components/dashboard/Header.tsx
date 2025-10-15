@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
-import { IoIosNotifications } from "react-icons/io";
 import { IoFilter } from "react-icons/io5";
 import { Button } from "../ui/button";
 import { useParams, usePathname, useRouter } from "next/navigation";
+import { DynamicWidget, useIsLoggedIn } from "@dynamic-labs/sdk-react-core";
 
 type Props = {};
 
@@ -11,6 +11,7 @@ const Header = (props: Props) => {
   const { id } = useParams();
   const pathname = usePathname();
   const router = useRouter();
+  const isLoggedIn = useIsLoggedIn();
 
   const isActive = (route: string) => {
     return pathname.includes(route.replace("/", ""));
@@ -36,26 +37,31 @@ const Header = (props: Props) => {
 
         {/* Action Buttons */}
         <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
-          {!isActive("/dashboard") && (
-            <Button
-              className="text-xs sm:text-sm md:text-base h-10 sm:h-11 md:h-12 lg:h-14 px-4 sm:px-6 md:w-36 lg:w-40 font-semibold rounded-lg bg-subsidiary hover:bg-white hover:text-subsidiary text-white"
-              onClick={() => {
-                router.push("/attendee-login");
-              }}
-            >
-              Log in
-            </Button>
-          )}
+          {isLoggedIn ? (
+            <div className="hidden md:flex">
 
-          {/* Notification */}
-          <div className="bg-subsidiary flex justify-center items-center rounded-full h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 cursor-pointer">
-            <IoIosNotifications className="w-5 h-5 sm:w-[30px] sm:h-[30px] md:w-[35px] md:h-[35px]" color="#FFFFFF" />
-          </div>
+              <DynamicWidget buttonContainerClassName="h-10 sm:h-11 md:h-12 lg:h-14 px-4 sm:px-6 md:w-36 lg:w-40" buttonClassName="w-full h-full" variant="modal" />
+            </div>
+          ) : (
+            !isActive("/dashboard") && (
+              <Button
+                className="text-xs sm:text-sm md:text-base h-10 sm:h-11 md:h-12 lg:h-14 px-4 sm:px-6 md:w-36 lg:w-40 font-semibold rounded-lg bg-subsidiary hover:bg-white hover:text-subsidiary text-white"
+                onClick={() => {
+                  router.push("/attendee-login");
+                }}
+              >
+                Log in
+              </Button>
+            )
+          )}
 
           {/* Filter */}
           {!isActive(`${id}`) && (
             <div className="bg-subsidiary flex justify-center items-center rounded-full h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 cursor-pointer">
-              <IoFilter className="w-5 h-5 sm:w-[30px] sm:h-[30px] md:w-[35px] md:h-[35px]" color="#FFFFFF" />
+              <IoFilter
+                className="w-5 h-5 sm:w-[30px] sm:h-[30px] md:w-[35px] md:h-[35px]"
+                color="#FFFFFF"
+              />
             </div>
           )}
         </div>

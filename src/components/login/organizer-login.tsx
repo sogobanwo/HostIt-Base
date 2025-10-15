@@ -1,24 +1,37 @@
-import React from "react";
+"use client";
+
+import React, { useEffect } from "react";
 import AttendeeOrganizerCircle from "./attendee-Organizer-Circle";
 import Image from "next/image";
 import { Card } from "../ui/card";
-import { Button } from "../ui/button";
 import { FaUsersRectangle } from "react-icons/fa6";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import {
+  DynamicConnectButton,
+  useIsLoggedIn,
+} from "@dynamic-labs/sdk-react-core";
 
 const OrganizerLogin = () => {
-    const router = useRouter();
+  const router = useRouter();
+  const isLoggedIn = useIsLoggedIn();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.push("/dashboard/organizer/create-event");
+    }
+  }, [isLoggedIn]);
+
   return (
     <div className="2xl:max-w-[1200px] max-w-[1024px] min-h-screen mx-auto flex flex-col 2xl:pt-28 pt-10 2xl:gap-10">
       <Link href={"/"}>
-      <Image
-        src={"/logo.png"}
-        width={149}
-        height={47}
-        alt="HostIt logo"
-        className="hidden md:flex"
-      />
+        <Image
+          src={"/logo.png"}
+          width={149}
+          height={47}
+          alt="HostIt logo"
+          className="hidden md:flex"
+        />
       </Link>
       <div className="flex items-center justify-center">
         <AttendeeOrganizerCircle page="Organize" />
@@ -39,9 +52,12 @@ const OrganizerLogin = () => {
               className="text-subsidiary group-hover:text-white -ml-8 -mt-8 -rotate-45"
             />
           </div>
-          <Button className="2xl:text-xl text-lg h-12 2xl:h-14 w-full font-semibold rounded-lg bg-subsidiary hover:bg-white hover:text-subsidiary text-white" onClick={()=>router.push("/dashboard/organizer/create-event")}>
+          <DynamicConnectButton
+            buttonContainerClassName="w-full"
+            buttonClassName="2xl:text-xl text-lg h-12 2xl:h-14 w-full font-semibold rounded-lg bg-subsidiary hover:bg-white hover:text-subsidiary text-white"
+          >
             Log in
-          </Button >
+          </DynamicConnectButton>
         </Card>
         <p className="2xl:text-2xl text-xl font-semibold">
           Attending an event?{" "}

@@ -19,6 +19,8 @@ export type EventFormData = {
   eventCategory: string;
   ticketTypes: TicketType[];
   eventImage: string;
+  isFree: boolean;
+  isRefundable: boolean;
 };
 
 export type ValidationErrors = {
@@ -34,7 +36,7 @@ export type ValidationErrors = {
   ticketErrors?: { [key: number]: { name?: string; price?: string; quantity?: string } };
 };
 
-export const useEventForm = () => {
+export const useEventForm = (opts?: { onValidSubmit?: (data: EventFormData) => void }) => {
   const [formData, setFormData] = useState<EventFormData>({
     eventName: "",
     startDate: "",
@@ -46,6 +48,8 @@ export const useEventForm = () => {
     location: "",
     eventImage: "",
     eventType: "",
+    isFree: false,
+    isRefundable: false,
   });
 
   const [errors, setErrors] = useState<ValidationErrors>({});
@@ -76,6 +80,23 @@ export const useEventForm = () => {
     setFormData((prev) => ({ ...prev, description: value }));
     if (errors.description) {
       setErrors((prev) => ({ ...prev, description: undefined }));
+    }
+  };
+
+  const handleToggleChange = (field: "isFree" | "isRefundable", value: boolean) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    // Clear any ticket price errors when toggling free on
+    if (field === "isFree" && value && errors.ticketErrors) {
+      const cleared: { [key: number]: { name?: string; price?: string; quantity?: string } } = {};
+      for (const [idStr, terr] of Object.entries(errors.ticketErrors)) {
+        const id = Number(idStr);
+        cleared[id] = { ...terr, price: undefined };
+      }
+      setErrors((prev) => ({ ...prev, ticketErrors: cleared }));
+      // Also clear general ticketTypes error since price is no longer required when free
+      if (errors.ticketTypes) {
+        setErrors((prev) => ({ ...prev, ticketTypes: undefined }));
+      }
     }
   };
 
@@ -236,10 +257,12 @@ export const useEventForm = () => {
         ticketError.name = "Ticket name is required";
       }
 
-      if (!ticket.price.trim()) {
-        ticketError.price = "Price is required";
-      } else if (parseFloat(ticket.price) <= 0) {
-        ticketError.price = "Price must be greater than 0";
+      if (!formData.isFree) {
+        if (!ticket.price.trim()) {
+          ticketError.price = "Price is required";
+        } else if (parseFloat(ticket.price) <= 0) {
+          ticketError.price = "Price must be greater than 0";
+        }
       }
 
       if (!ticket.quantity.trim()) {
@@ -248,8 +271,14 @@ export const useEventForm = () => {
         ticketError.quantity = "Quantity must be greater than 0";
       }
 
-      if (ticket.name.trim() && parseFloat(ticket.price) > 0 && parseInt(ticket.quantity) > 0) {
-        hasValidTicket = true;
+      if (formData.isFree) {
+        if (ticket.name.trim() && parseInt(ticket.quantity) > 0) {
+          hasValidTicket = true;
+        }
+      } else {
+        if (ticket.name.trim() && parseFloat(ticket.price) > 0 && parseInt(ticket.quantity) > 0) {
+          hasValidTicket = true;
+        }
       }
 
       if (Object.keys(ticketError).length > 0) {
@@ -262,7 +291,9 @@ export const useEventForm = () => {
     }
 
     if (!hasValidTicket) {
-      newErrors.ticketTypes = "At least one valid ticket type is required (name, price > 0, quantity > 0)";
+      newErrors.ticketTypes = formData.isFree
+        ? "At least one valid ticket type is required (name, quantity > 0)"
+        : "At least one valid ticket type is required (name, price > 0, quantity > 0)";
     }
 
     // Image validation
@@ -293,8 +324,11 @@ export const useEventForm = () => {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      console.log('Form submitted:', formData);
-      // Handle form submission here
+      if (opts?.onValidSubmit) {
+        opts.onValidSubmit(formData);
+      } else {
+        console.log('Form submitted:', formData);
+      }
     }
   };
 
@@ -307,6 +341,7 @@ export const useEventForm = () => {
     handleInputChange,
     handleInputBlur,
     handleDescriptionChange,
+    handleToggleChange,
     handleTicketBlur,
     addTicketType,
     removeTicketType,
