@@ -114,6 +114,7 @@ const Sidebar = () => {
       {/* Bottom Navbar (Mobile Only) */}
       <div className="fixed bottom-0 md:hidden w-full bg-principal z-50 py-2 px-4 flex justify-between items-center shadow-md">
         {isOrganizer ? (
+          
           <>
             {renderIcon(
               <IoIosCreate className="w-6 h-6" color="#FFF" />,
