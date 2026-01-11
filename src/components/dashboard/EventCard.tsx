@@ -9,7 +9,7 @@ type Props = {
   location?: string;
   description?: string;
   name?: string;
-  id?: number;
+  id?: number | string;
 };
 
 const EventCard = ({

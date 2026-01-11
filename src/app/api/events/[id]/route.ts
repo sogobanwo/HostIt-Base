@@ -3,7 +3,7 @@ import Event from "../../../models/eventModel";
 import { connectDB } from "@/app/lib/db";
 
 const ALLOWED_ORIGINS = [
-  "https://www.hodsit.events",
+  "https://www.hosit.events",
   "http://localhost:3000",
   "http://localhost:3001",
 ];

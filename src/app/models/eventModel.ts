@@ -7,6 +7,12 @@ const scheduleSchema = new mongoose.Schema({
   description: { type: String, required: true },
 });
 
+const ticketTypeSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  price: { type: Number, required: true },
+  quantity: { type: Number, required: true },
+});
+
 const eventSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -30,11 +36,22 @@ const eventSchema = new mongoose.Schema({
     },
     event_category: {
         type: String,
-        required: [true, "Please enter the event category"],
     },
     location: {
         type: String,
         required: [true, "Please enter the event location"],
+    },
+    start_date: {
+        type: Date,
+        required: [true, "Please enter the event start date"],
+    },
+    end_date: {
+        type: Date,
+        required: [true, "Please enter the event end date"],
+    },
+    ticket_types: {
+        type: [ticketTypeSchema],
+        required: [true, "Please add at least one ticket type"],
     },
     schedule: {
         type: [scheduleSchema],

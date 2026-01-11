@@ -18,6 +18,14 @@ const Page = () => {
     touched,
     selectedImage,
     fileInputRef,
+    showLocationPicker,
+    isSubmitting,
+    submitError,
+    submitSuccess,
+    contractTxHash,
+    isCreatingContract,
+    isConfirming,
+    isContractSuccess,
     handleInputChange,
     handleInputBlur,
     handleDescriptionChange,
@@ -27,9 +35,15 @@ const Page = () => {
     updateTicketType,
     handleFileSelect,
     handleSubmit,
+    isFormComplete,
+    hasErrors,
+    openLocationPicker,
+    closeLocationPicker,
+    selectLocation,
   } = useEventForm();
 
   return (
+    <>
     <div className="flex flex-col lg:flex-row gap-6 mx-auto w-full max-w-[1200px] p-4 md:p-6 mb-14">
       {/* Left Column - Image and Location */}
       <div className="flex flex-col md:flex-row lg:flex-col gap-6 w-full lg:w-auto">
@@ -64,13 +78,16 @@ const Page = () => {
         
         <div className="flex flex-col gap-3">
           <h3 className="text-lg font-bold text-white">Pick a Location</h3>
-          <div className="h-64 w-full sm:w-64 md:h-80 md:w-80 relative cursor-pointer">
+          <div
+            className="h-64 w-full sm:w-64 md:h-80 md:w-80 relative cursor-pointer"
+            onClick={openLocationPicker}
+          >
             <img
               src="/pick-location.png"
               alt="Location picker"
               className="h-full w-full rounded-2xl object-cover"
             />
-            <div className="absolute inset-0 bg-black bg-opacity-50 rounded-2xl flex items-center justify-center">
+            <div className="absolute inset-0 bg-black bg-opacity-50 rounded-2xl flex items-center justify-center hover:bg-opacity-40 transition-all duration-200">
               <div className="bg-black rounded-full p-3 md:p-4">
                 <MdAddLocationAlt className="text-white" size={20} />
               </div>
@@ -322,16 +339,104 @@ const Page = () => {
 
         {/* Submit Button */}
         <div className="md:col-span-2 flex flex-col gap-3">
+          {/* Error Message */}
+          {submitError && (
+            <div className="bg-red-500/10 border border-red-500/50 rounded-xl p-4 text-red-400 text-sm">
+              {submitError}
+            </div>
+          )}
+
+          {/* Contract Transaction Status */}
+          {contractTxHash && (
+            <div className="bg-blue-500/10 border border-blue-500/50 rounded-xl p-4 text-blue-400 text-sm">
+              {isConfirming && (
+                <div className="flex items-center gap-2">
+                  <svg
+                    className="animate-spin h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  <span>Confirming transaction...</span>
+                </div>
+              )}
+              {isContractSuccess && (
+                <div className="flex items-center gap-2">
+                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                  <span>Transaction confirmed!</span>
+                </div>
+              )}
+              <div className="mt-2 text-xs break-all">
+                Tx Hash: {contractTxHash}
+              </div>
+            </div>
+          )}
+
+          {/* Success Message */}
+          {submitSuccess && !contractTxHash && (
+            <div className="bg-green-500/10 border border-green-500/50 rounded-xl p-4 text-green-400 text-sm">
+              Event created successfully! Creating blockchain ticket...
+            </div>
+          )}
+
+          {submitSuccess && isContractSuccess && (
+            <div className="bg-green-500/10 border border-green-500/50 rounded-xl p-4 text-green-400 text-sm">
+              Event and ticket created successfully! Redirecting...
+            </div>
+          )}
+
           <Button
             onClick={handleSubmit}
             className={`p-4 md:p-6 text-white font-bold text-base md:text-lg transition-all duration-200 ${
-              Object.keys(errors).length === 0 && formData.eventImage
+              isFormComplete() && !hasErrors() && !isSubmitting
                 ? "bg-subsidiary hover:bg-subsidiary/80 hover:scale-105 cursor-pointer"
                 : "bg-gray-600 cursor-not-allowed opacity-50"
             }`}
-            disabled={Object.keys(errors).length > 0 || !formData.eventImage}
+            disabled={!isFormComplete() || hasErrors() || isSubmitting}
           >
-            Create Event
+            {isSubmitting ? (
+              <span className="flex items-center justify-center gap-2">
+                <svg
+                  className="animate-spin h-5 w-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                {isCreatingContract ? "Creating Ticket on Blockchain..." : "Creating Event..."}
+              </span>
+            ) : (
+              "Create Event"
+            )}
           </Button>
         </div>
       </div>
@@ -418,6 +523,79 @@ const Page = () => {
         }
       `}</style>
     </div>
+
+      {/* Location Picker Modal */}
+      {showLocationPicker && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 p-4">
+          <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-white/20">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-white">Pick a Location</h2>
+              <button
+                onClick={closeLocationPicker}
+                className="text-white/60 hover:text-white transition-colors"
+              >
+                <X size={24} />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              {/* Search/Input Location */}
+              <div>
+                <label className="block text-white mb-2 font-medium">
+                  Search or Enter Location
+                </label>
+                <input
+                  type="text"
+                  value={formData.location}
+                  onChange={(e) => {
+                    handleInputChange(e);
+                  }}
+                  name="location"
+                  placeholder="Enter location address"
+                  className="w-full bg-transparent border border-white/60 h-14 text-lg p-4 rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/80"
+                />
+              </div>
+
+              {/* Map Placeholder - Replace with actual map component */}
+              <div className="h-96 bg-gray-800 rounded-xl border border-white/20 flex items-center justify-center relative overflow-hidden">
+                <img
+                  src="/pick-location.png"
+                  alt="Map placeholder"
+                  className="w-full h-full object-cover opacity-30"
+                />
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-white/60">
+                  <MdAddLocationAlt size={48} className="mb-2" />
+                  <p className="text-center">
+                    Map integration coming soon
+                    <br />
+                    <span className="text-sm">
+                      Enter location manually above
+                    </span>
+                  </p>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-3 pt-4">
+                <Button
+                  onClick={closeLocationPicker}
+                  className="flex-1 bg-white/10 hover:bg-white/20 text-white"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => selectLocation(formData.location)}
+                  className="flex-1 bg-subsidiary hover:bg-subsidiary/80 text-white"
+                  disabled={!formData.location.trim()}
+                >
+                  Confirm Location
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
