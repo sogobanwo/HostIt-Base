@@ -29,7 +29,10 @@ export const AppWagmiProvider = ({
   return (
     <DynamicContextProvider
       settings={{
-        environmentId: process.env.NEXT_PUBLIC_DYNAMIC_ENVIROMENT_ID || "",
+        environmentId:
+          process.env.NEXT_PUBLIC_DYNAMIC_ENVIRONMENT_ID ||
+          process.env.NEXT_PUBLIC_DYNAMIC_ENVIROMENT_ID ||
+          "",
         walletConnectors: [
           EthereumWalletConnectors,
           ZeroDevSmartWalletConnectors,

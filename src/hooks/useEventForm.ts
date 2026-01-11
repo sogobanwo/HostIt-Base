@@ -26,6 +26,8 @@ export type EventFormData = {
   eventCategory: string;
   ticketTypes: TicketType[];
   eventImage: string;
+  isFree: boolean;
+  isRefundable: boolean;
 };
 
 export type ValidationErrors = {
@@ -41,11 +43,7 @@ export type ValidationErrors = {
   ticketErrors?: { [key: number]: { name?: string; price?: string; quantity?: string } };
 };
 
-export const useEventForm = () => {
-  const router = useRouter();
-  const { writeContract, data: contractTxHash, isPending: isContractPending } = useWriteContract();
-  const contractAddress = process.env.NEXT_PUBLIC_TICKET_FACTORY_FACET_ADDRESS || "0x";
-
+export const useEventForm = (opts?: { onValidSubmit?: (data: EventFormData) => void }) => {
   const [formData, setFormData] = useState<EventFormData>({
     eventName: "",
     startDate: "",
@@ -57,6 +55,8 @@ export const useEventForm = () => {
     location: "",
     eventImage: "",
     eventType: "",
+    isFree: false,
+    isRefundable: false,
   });
 
   const [errors, setErrors] = useState<ValidationErrors>({});
@@ -97,6 +97,23 @@ export const useEventForm = () => {
     setFormData((prev) => ({ ...prev, description: value }));
     if (errors.description) {
       setErrors((prev) => ({ ...prev, description: undefined }));
+    }
+  };
+
+  const handleToggleChange = (field: "isFree" | "isRefundable", value: boolean) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    // Clear any ticket price errors when toggling free on
+    if (field === "isFree" && value && errors.ticketErrors) {
+      const cleared: { [key: number]: { name?: string; price?: string; quantity?: string } } = {};
+      for (const [idStr, terr] of Object.entries(errors.ticketErrors)) {
+        const id = Number(idStr);
+        cleared[id] = { ...terr, price: undefined };
+      }
+      setErrors((prev) => ({ ...prev, ticketErrors: cleared }));
+      // Also clear general ticketTypes error since price is no longer required when free
+      if (errors.ticketTypes) {
+        setErrors((prev) => ({ ...prev, ticketTypes: undefined }));
+      }
     }
   };
 
@@ -281,16 +298,28 @@ export const useEventForm = () => {
         ticketError.name = "Ticket name is required";
       }
 
-      if (!ticket.price.trim()) {
-        ticketError.price = "Price is required";
-      } else if (parseFloat(ticket.price) <= 0) {
-        ticketError.price = "Price must be greater than 0";
+      if (!formData.isFree) {
+        if (!ticket.price.trim()) {
+          ticketError.price = "Price is required";
+        } else if (parseFloat(ticket.price) <= 0) {
+          ticketError.price = "Price must be greater than 0";
+        }
       }
 
       if (!ticket.quantity.trim()) {
         ticketError.quantity = "Quantity is required";
       } else if (parseInt(ticket.quantity) <= 0) {
         ticketError.quantity = "Quantity must be greater than 0";
+      }
+
+      if (formData.isFree) {
+        if (ticket.name.trim() && parseInt(ticket.quantity) > 0) {
+          hasValidTicket = true;
+        }
+      } else {
+        if (ticket.name.trim() && parseFloat(ticket.price) > 0 && parseInt(ticket.quantity) > 0) {
+          hasValidTicket = true;
+        }
       }
 
       if (Object.keys(ticketError).length > 0) {
@@ -303,7 +332,9 @@ export const useEventForm = () => {
     }
 
     if (!hasValidTicket) {
-      newErrors.ticketTypes = "At least one valid ticket type is required (name, price > 0, quantity > 0)";
+      newErrors.ticketTypes = formData.isFree
+        ? "At least one valid ticket type is required (name, quantity > 0)"
+        : "At least one valid ticket type is required (name, price > 0, quantity > 0)";
     }
 
     // Image validation
@@ -385,55 +416,10 @@ export const useEventForm = () => {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      setIsSubmitting(true);
-
-      try {
-        // Step 1: Create event in backend database
-        toast.info("Creating event in database...");
-        const response = await createEvent(formData);
-        console.log('Event created successfully in database:', response);
-
-        // Step 2: Create ticket on blockchain
-        setIsCreatingContract(true);
-        toast.info("Creating ticket on blockchain...");
-
-        const contractParams = prepareContractTicketData(formData, response.event.id);
-        console.log('Contract parameters:', contractParams);
-
-        // Call contract to create ticket
-        writeContract({
-          abi: ticketFactory,
-          address: getAddress(contractAddress),
-          functionName: "createTicket",
-          args: [
-            contractParams.name,
-            contractParams.symbol,
-            contractParams.uri,
-            contractParams.startTime,
-            contractParams.endTime,
-            contractParams.purchaseStartTime,
-            contractParams.maxTicket,
-            contractParams.isFree,
-            contractParams.feeTypes,
-            contractParams.fees
-          ],
-        });
-
-        toast.success("Transaction submitted! Waiting for confirmation...");
-        setSubmitSuccess(true);
-
-        // Redirect after short delay (transaction will continue in background)
-        setTimeout(() => {
-          router.push(`/dashboard/organizer/event-analytics`);
-        }, 3000);
-
-      } catch (error) {
-        setSubmitError(error instanceof Error ? error.message : "Failed to create event");
-        toast.error(error instanceof Error ? error.message : "Failed to create event");
-        console.error('Error creating event:', error);
-      } finally {
-        setIsSubmitting(false);
-        setIsCreatingContract(false);
+      if (opts?.onValidSubmit) {
+        opts.onValidSubmit(formData);
+      } else {
+        console.log('Form submitted:', formData);
       }
     }
   };
@@ -455,6 +441,7 @@ export const useEventForm = () => {
     handleInputChange,
     handleInputBlur,
     handleDescriptionChange,
+    handleToggleChange,
     handleTicketBlur,
     addTicketType,
     removeTicketType,

@@ -3,7 +3,7 @@ import Event from "../../../models/eventModel";
 import { connectDB } from "@/app/lib/db";
 
 const ALLOWED_ORIGINS = [
-  "https://www.hosit.events",
+  "https://www.hodsit.events",
   "http://localhost:3000",
   "http://localhost:3001",
 ];
@@ -62,6 +62,7 @@ export async function GET(
       image: `https://ipfs.io/ipfs/${event.image}`,
       description: event.description,
       external_url: "https://www.hostit.events/events/" + event._id,
+      ticketId: event.ticketId ?? null,
       attributes: [
         {
           trait_type: "Organizer Name",
@@ -108,39 +109,34 @@ export async function PUT(
     await connectDB();
 
     const body = await request.json();
-    const {
-      name,
-      image,
-      description,
-      organizer_name,
-      event_type,
-      event_category,
-      location,
-      schedule,
-    } = body;
+    const update: Record<string, any> = {};
+    const allowedFields = [
+      "name",
+      "image",
+      "description",
+      "organizer_name",
+      "event_type",
+      "event_category",
+      "location",
+      "schedule",
+      "ticketId",
+    ];
 
-    if (!name || !description || !organizer_name) {
+    for (const key of allowedFields) {
+      if (Object.prototype.hasOwnProperty.call(body, key)) {
+        update[key] = body[key];
+      }
+    }
+
+    if (Object.keys(update).length === 0) {
       const response = NextResponse.json(
-        { message: "Missing required fields" },
+        { message: "No valid fields provided for update" },
         { status: 400 }
       );
       return addCorsHeaders(response, request);
     }
 
-    const updatedEvent = await Event.findByIdAndUpdate(
-      id,
-      {
-        name,
-        image,
-        description,
-        organizer_name,
-        event_type,
-        event_category,
-        location,
-        schedule,
-      },
-      { new: true }
-    );
+    const updatedEvent = await Event.findByIdAndUpdate(id, update, { new: true });
 
     if (!updatedEvent) {
       const response = NextResponse.json(

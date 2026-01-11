@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ReactLenis } from "@/utils/lenis";
 import { AppWagmiProvider } from "@/connection";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "HostIT",
@@ -18,6 +19,7 @@ export default function RootLayout({
       <AppWagmiProvider>
         <ReactLenis root>
           <body className={`bg-[#131939] antialiased text-text`}>
+            <Toaster richColors closeButton position="top-right" />
             {children}
           </body>
         </ReactLenis>

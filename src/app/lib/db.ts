@@ -1,13 +1,5 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.NEXT_PUBLIC_MONGODB_URL as string;
-
-if (!MONGODB_URI) {
-  throw new Error(
-    "Please define the MONGODB_URI environment variable inside .env"
-  );
-}
-
 /**
  * Global is used here to maintain a cached connection across hot reloads
  * in development. This prevents connections growing exponentially
@@ -19,7 +11,17 @@ if (!cached) {
   cached = (global as any).mongoose = { conn: null, promise: null };
 }
 
-export const connectDB = async () => {
+export const connectDB = async (): Promise<typeof mongoose | null> => {
+  const uri = process.env.NEXT_PUBLIC_MONGODB_URL as string | undefined;
+
+  // Gracefully handle missing configuration instead of throwing at import time.
+  if (!uri) {
+    if (process.env.NODE_ENV !== "production") {
+      console.warn("[db] NEXT_PUBLIC_MONGODB_URL is not set; skipping DB connection.");
+    }
+    return null;
+  }
+
   if (cached.conn) {
     return cached.conn;
   }
@@ -27,7 +29,7 @@ export const connectDB = async () => {
   if (!cached.promise) {
     cached.promise = mongoose
       .connect(
-        `${MONGODB_URI}?retryWrites=true&w=majority&tls=true&tlsAllowInvalidCertificates=true`,
+        `${uri}?retryWrites=true&w=majority&tls=true&tlsAllowInvalidCertificates=true`,
         {
           tls: true,
           tlsAllowInvalidCertificates: true,

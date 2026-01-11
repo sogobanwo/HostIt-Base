@@ -1,8 +1,11 @@
 import React from "react";
 import { Button } from "../ui/button";
 import { motion } from "framer-motion"; 
+import { BsFillRocketTakeoffFill } from "react-icons/bs";
+import { useRouter } from "next/navigation";
 
 const HeroSection = () => {
+  const router = useRouter();
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -32,14 +35,14 @@ const HeroSection = () => {
       animate="visible"
     >
       <motion.h1
-        className="text-center text-wrap bg-gradient-to-r from-[#007CFA] from-30% to-white to-95% bg-clip-text text-transparent text-4xl font-semibold md:text-6xl md:font-normal"
+        className="text-center text-wrap bg-gradient-to-r from-[#007CFA] from-30% to-white to-95% bg-clip-text text-transparent text-4xl font-semibold md:text-6xl md:font-semibold"
         variants={childVariants}
       >
         Your Event, Your Rules—We Handle the Rest.
       </motion.h1>
 
       <motion.p
-        className="text-lg mx-auto max-w-[408px]"
+        className="text-lg md:text-xl mx-auto max-w-[408px]"
         variants={childVariants}
       >
         HostIt simplifies ticketing and verification, so you can focus on
@@ -51,11 +54,11 @@ const HeroSection = () => {
         whileHover={{ scale: 1.05 }} 
         whileTap={{ scale: 0.95 }} 
       >
-        <a href="https://calendly.com/fullstackchat/30min" target="_blank">
-          <Button className="flex items-center justify-center gap-2 text-white text-base md:text-lg bg-subsidiary p-6 mx-auto">
-            Request Our Services
+          <Button className="flex items-center justify-center gap-2 text-white text-base md:text-lg bg-subsidiary p-6 mx-auto rounded-xl"  onClick={() => {
+          router.push("/explore");
+        }}>
+            Launch dApp <BsFillRocketTakeoffFill />
           </Button>
-        </a>
       </motion.div>
     </motion.div>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { GoDotFill } from "react-icons/go";
 import { useParams, useRouter } from "next/navigation";
@@ -9,8 +9,6 @@ import { FaBookmark } from "react-icons/fa6";
 import { IoIosShareAlt } from "react-icons/io";
 import { Button } from "@/components/ui/button";
 import GooMap from "@/components/map";
-import { allEvents } from "@/components/data";
-import { convertDateFormat } from "@/lib/utils";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { GiPadlock } from "react-icons/gi";
 import QRCode from "react-qr-code";
@@ -25,12 +23,52 @@ import MerchCard from "@/components/dashboard/MerchCard";
 import { MdOutlineQrCodeScanner } from "react-icons/md";
 import { Input } from "@/components/ui/input";
 import { MdAnalytics } from "react-icons/md";
+import { useContractRead, useContractWrite } from "@/hooks/useContract";
+import { formatEther } from "viem";
 
 const Page = () => {
   const router = useRouter();
   const { id } = useParams();
-  const [uploadImage, setUploadImage] = React.useState(true);
-  const currentEvent = allEvents.find((event) => event.id === Number(id));
+  const [uploadImage, setUploadImage] = useState(true);
+  const [tokenId, setTokenId] = useState<string>("");
+  const [eventJson, setEventJson] = useState<any | null>(null);
+
+  useEffect(() => {
+    const fetchEvent = async () => {
+      try {
+        const res = await fetch(`/api/events/${id}`);
+        if (!res.ok) return;
+        const data = await res.json();
+        setEventJson(data);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    if (id) fetchEvent();
+  }, [id]);
+
+  const ticketId = eventJson?.ticketId ?? null;
+  const feeTypeNative = 0;
+  const { data: feeData } = useContractRead<bigint>({
+    abiName: "MarketplaceFacetAbi",
+    functionName: "getTicketFee",
+    args: ticketId !== null ? [BigInt(ticketId), feeTypeNative] : undefined,
+    enabled: ticketId !== null,
+  });
+  const feeWei = (feeData?.result ?? BigInt(0)) as bigint;
+  const isFree = feeWei === BigInt(0);
+
+  const checkedInQuery = useContractRead<readonly string[]>({
+    abiName: "CheckInFacetAbi",
+    functionName: "getCheckedIn",
+    args: ticketId !== null ? [BigInt(ticketId)] : undefined,
+    enabled: ticketId !== null,
+  });
+
+  const checkInMutation = useContractWrite<[number, string, bigint]>({
+    abiName: "CheckInFacetAbi",
+    functionName: "checkIn",
+  });
 
   return (
     <Tabs defaultValue="details" className="w-full">
@@ -95,13 +133,13 @@ const Page = () => {
             {/* Main Content - Left Side */}
             <div className="w-full lg:w-2/3 relative">
               <img
-                src="/event-image.png"
+                src={eventJson?.image ?? "/event-image.png"}
                 alt="event-image"
                 className="w-full rounded-3xl h-48 sm:h-56 2xl:h-64 object-cover"
               />
 
               <div className="absolute top-4 left-4 px-3 sm:px-4 py-1 rounded-full font-semibold text-sm sm:text-base z-10 border-2 border-white bg-[#13193980] text-white">
-                {currentEvent?.isFree ? "Free" : "Paid"}
+                {isFree ? "Free" : "Paid"}
               </div>
               
               <div className="my-6 2xl:my-10 border-2 border-subsidiary rounded-full w-full sm:w-72 2xl:w-96 flex justify-center items-center h-12 2xl:h-14 mx-auto lg:mx-0">
@@ -111,7 +149,7 @@ const Page = () => {
               </div>
               
               <p className="text-white text-base sm:text-lg 2xl:text-xl">
-                {currentEvent?.description}
+                {eventJson?.description}
               </p>
             </div>
 
@@ -120,21 +158,21 @@ const Page = () => {
               {/* Event Title and Date */}
               <div>
                 <h1 className="text-xl sm:text-2xl 2xl:text-3xl font-semibold bg-gradient-to-r from-[#007CFA] from-30% to-white to-95% bg-clip-text text-transparent">
-                  {currentEvent?.name}
+                  {eventJson?.name}
                 </h1>
                 <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 items-start sm:items-center">
                   <p className="uppercase text-sm sm:text-base 2xl:text-lg text-white">
-                    {convertDateFormat(currentEvent?.date as string)}
+                    {/* Date unavailable in metadata */}
                   </p>
                   <GoDotFill className="text-white text-xl hidden sm:block" />
                   <p className="uppercase text-sm sm:text-base 2xl:text-lg text-white">
-                    {currentEvent?.time}
+                    {/* Time unavailable in metadata */}
                   </p>
                 </div>
               </div>
 
               {/* Ticket POAP */}
-              <TicketPoap isTicket isAttendee={true} />
+              <TicketPoap isTicket isAttendee={true} ticketId={ticketId} />
 
               {/* Action Buttons */}
               <div className="flex flex-row items-center justify-end gap-4">
@@ -213,7 +251,7 @@ const Page = () => {
               </div>
 
               {/* POAP Section */}
-              <TicketPoap isTicket={false} isAttendee={true} />
+              <TicketPoap isTicket={false} isAttendee={true} ticketId={ticketId} />
             </div>
           </div>
         </TabsContent>
@@ -365,6 +403,53 @@ const Page = () => {
                     Check in attendee and wait for on-chain confirmation.
                   </li>
                 </ul>
+
+                <div className="mt-4 p-4 border rounded-2xl">
+                  <div className="flex items-center justify-between">
+                    <p className="text-white text-sm sm:text-base">Checked-in attendees</p>
+                    <p className="text-white text-sm sm:text-base font-semibold">
+                      {checkedInQuery.isLoading ? "Loading..." : (checkedInQuery.data?.result.length ?? 0)}
+                    </p>
+                  </div>
+                  <div className="mt-3 flex flex-col sm:flex-row gap-3">
+                    <Input
+                      placeholder="Your tokenId"
+                      value={tokenId}
+                      onChange={(e) => setTokenId(e.target.value)}
+                      className="text-white"
+                    />
+                    <Button
+                      variant="brand"
+                      onClick={async () => {
+                        try {
+                          // Use connected account as ticket owner
+                          const addresses = (await import("@/lib/chain")).walletClient
+                            ? await (await import("@/lib/chain")).walletClient!.getAddresses()
+                            : [];
+                          const owner = addresses[0];
+                          if (!owner) {
+                            alert("Please connect a wallet.");
+                            return;
+                          }
+                          const tid = BigInt(tokenId || "0");
+                          if (ticketId === null) {
+                            alert("Ticket not available for this event.");
+                            return;
+                          }
+                          await checkInMutation.mutateAsync({
+                            args: [Number(ticketId), owner, tid],
+                          });
+                          alert("Check-in transaction submitted.");
+                        } catch (e) {
+                          console.error(e);
+                          alert("Failed to submit check-in.");
+                        }
+                      }}
+                    >
+                      Check me in
+                    </Button>
+                  </div>
+                </div>
                 
                 <div className="flex flex-col sm:flex-row gap-3">
                   <Input

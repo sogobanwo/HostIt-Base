@@ -9,7 +9,8 @@ type Props = {
   location?: string;
   description?: string;
   name?: string;
-  id?: number | string;
+  id?: string | number;
+  image?: string;
 };
 
 const EventCard = ({
@@ -20,6 +21,7 @@ const EventCard = ({
   name,
   description,
   id,
+  image,
 }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -44,14 +46,16 @@ const EventCard = ({
         }
       }}
     >
-      <div className="absolute top-4 right-4 px-4 py-1 rounded-full font-semibold text-base z-1 border-2 border-white bg-[#13193980] text-white">
-        {isFree ? "Free" : "Paid"}
-      </div>
+      {typeof isFree !== "undefined" && (
+        <div className="absolute top-4 right-4 px-4 py-1 rounded-full font-semibold text-base z-1 border-2 border-white bg-[#13193980] text-white">
+          {isFree ? "Free" : "Paid"}
+        </div>
+      )}
 
       {/* Image that disappears on hover */}
       <div className="w-full h-[60%] transition-opacity duration-500 ease-in-out group-hover:opacity-0">
         <img
-          src="/event-image.png"
+          src={image ?? "/event-image.png"}
           alt="event image"
           className="w-full rounded-t-[20px] h-full rounded-bl-[80px] object-cover"
         />
